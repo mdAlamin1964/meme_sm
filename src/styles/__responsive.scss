@@ -1,0 +1,70 @@
+$mobile-max-width: 768px;
+
+@media only screen and (max-width: $mobile-max-width) {
+    // Right side bar
+    .right-sidebar {
+        display: none;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Leftside bar
+    .left-sidebar-col {
+        position: fixed;
+        bottom: 40px;
+        background: $mobile-header-background;
+        bottom: 0;
+        height: 30px;
+        padding: 0px !important;
+        border-top: 1px solid $default-border-color;
+        .left-sidebar {
+            .logo {
+                display: none;
+            }
+
+        
+            .left-sidebar-bottom {
+                display: none;
+            }
+            
+            .left-sidebar-menu {
+                margin: 5px 0 !important;
+
+                ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    li {
+                        display: inline-block;
+                        margin-bottom: 0px !important;
+                        .left-menu-text {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+    // Header
+    .main-header {
+        margin-top: 70px;
+    }
+
+}

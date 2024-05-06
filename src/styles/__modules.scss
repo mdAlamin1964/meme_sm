@@ -1,0 +1,161 @@
+// User Box Modules //
+.user-box-module {
+    .user-name-image{
+        display: inline-flex;
+        align-items: center;
+        p {
+            font-size: 0.8em;
+        }
+        .user-image {
+        
+            img {
+                max-width: 40px;
+                border-radius: 50%;
+                margin-right: .4em;
+                border: 1px solid $default-border-color;
+            }
+        }
+
+        .user-info {
+            .user-name {
+                color: $gray-text-color;
+            }
+        }
+        
+    }
+    .user-switch-link {
+        display: inline-block;
+        float: right;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// User Head Modules
+.user-head-module {
+    .user-head-image {
+        max-width: 60px;
+        border-radius: 50%;
+        border: 4px solid #8c00ce;
+    }   
+    .user-head-id {
+        text-align: center;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// User post
+.user-post {
+    border-bottom: 1px solid $default-border-color;
+    padding-bottom: 15px;
+    .post-heading {
+        .image-name {
+            display: inline-flex;
+            align-items: center;
+            img {
+                max-width: 20px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+            .user-post-id {
+                font-weight: 600;
+                font-size: $default-user-font-size;
+                margin-right: 5px;
+            }
+
+            .user-post-timeago  {
+                display: block;
+                .material-symbols-outlined {
+                    height: 10px;
+                }
+                span {
+                    font-size: $default-user-font-size;
+                    font-weight: 200;
+                } 
+            }
+        }
+
+        .post-menus {
+            display: inline-block;
+            float: right;
+        }
+    }
+    .post-main-image {
+        img {
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .post-bottom-info {
+        .top {
+            .top-left {
+                display: inline-block
+            }
+            .top-right {
+                display: inline-block;
+                float: right;
+            }
+        }
+
+        .post-description {
+
+            span {
+                font-size: $default-user-font-size;
+            }
+        }
+
+        .post-comment{
+            .comment-text {
+                width: 90%;
+                display: inline-block;
+                form {
+                    display: flex;
+                    align-items: center;
+                }
+                 input {
+                    width: 100%;
+                    background: transparent;
+                    border: none;
+                    color: $primary-text-color;
+                    font-size: $default-user-font-size;
+                    &::placeholder {
+                        font-size: $default-user-font-size;
+                    }
+                    &:focus {
+                        outline: none;
+                    }
+                 }
+            }
+            .comment-emoji {
+                display: inline-block;
+                float: right;
+            }
+        }
+    }
+}

@@ -1,0 +1,62 @@
+$primary-text-color: #fff;
+$secondary-text-color: rgb(0, 219, 197);
+$gray-text-color: gray;
+$default-border-color: #310048;
+$primary-font-size: 14px;
+$default-list-margin-bottom: 1em;
+$default-user-font-size: 12px;
+$input-background: #2e053f;
+$mobile-header-background: #3D0059;
+
+@mixin primary-backround{
+    background: rgb(0,0,0);
+    background: radial-gradient(circle, rgba(0,0,0,1) 65%, rgba(64,0,94,1) 100%);
+}
+
+
+
+@mixin input-style-0 {
+    width: 100%;
+    background-color: $input-background;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: $primary-text-color;
+    &:focus {
+        outline: none;
+    }
+    &::placeholder {
+        font-weight: 300;
+        color:$gray-text-color;
+        font-size: 16px;
+    }
+}
+
+
+
+
+.white-link-hover {
+    color: $primary-text-color;
+    &:hover {
+        color:$gray-text-color;
+    }
+}
+
+
+.default-btn {
+    background: transparent;
+    color: $secondary-text-color;
+    border: none;
+    font-size: $default-user-font-size;
+    &:hover {
+        opacity: 0.8;
+    };
+}
+
+
+
+.icon-text {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}

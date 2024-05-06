@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    font-size: $primary-font-size;
+    font-family: 'roboto';
+    transition: .1s;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.material-symbols-outlined {
+    font-size: 18px;
+    color: $primary-text-color;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+a {
+    text-decoration: none;
+}
