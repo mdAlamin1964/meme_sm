@@ -28,7 +28,7 @@ body {
     height: 100vh;
     border-right: 1px solid $default-border-color;
     .logo {
-        width: 100%;
+        width: 90%;
         img{
             object-fit: cover;
             width: 100%;
@@ -107,6 +107,12 @@ body {
 
 
 
+
+// Middle sidebar
+
+.main-home {
+    padding: 0 20%;
+}
 
 
 

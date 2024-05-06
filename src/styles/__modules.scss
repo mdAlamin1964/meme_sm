@@ -48,6 +48,9 @@
         max-width: 60px;
         border-radius: 50%;
         border: 4px solid #8c00ce;
+        &:hover {
+            border-color: $gray-text-color;
+        }
     }   
     .user-head-id {
         text-align: center;

@@ -12,6 +12,9 @@ $mobile-max-width: 768px;
 
 
 
+    // Middle side bar
+    
+
 
 
 
@@ -23,7 +26,7 @@ $mobile-max-width: 768px;
         position: fixed;
         bottom: 40px;
         background: $mobile-header-background;
-        bottom: 0;
+        bottom: -1px;
         height: 30px;
         padding: 0px !important;
         border-top: 1px solid $default-border-color;
@@ -67,4 +70,13 @@ $mobile-max-width: 768px;
         margin-top: 70px;
     }
 
+
+
+
+
+
+    // Main home
+    .main-home{
+        padding: 0 5%!important;
+    }
 }

@@ -1,3 +1,4 @@
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Footer from './bars/Footer';
 import Header from './bars/Header';
@@ -7,6 +8,20 @@ import Mobile_header from './bars/Header-mobile';
 import Right_sidebar from './bars/right-sidebar';
 import './styles/main.css'
 function app() {
+  // Window innerWidth
+  const[currentWidth, setCurrentWidth] = React.useState(window.innerWidth)
+  
+  React.useEffect(()=> {
+    window.addEventListener('resize', ()=> {
+      setCurrentWidth(window.innerWidth)
+    })
+  },[])
+
+  console.log(currentWidth)
+  const mobileWidth = 768;
+
+  
+
   return (
     <>
       {/* Main Body */}
@@ -16,8 +31,11 @@ function app() {
                 <Left_sidebar />
           </div>
           <div className="col-md-7 order-1 order-md-2 middle-sidebar sidebar p-0">
-            {/* <Mobile_header /> */}
-            <Header />
+            {currentWidth >= mobileWidth?
+              <Header /> 
+              : 
+              <Mobile_header />}
+            
             <Home />
           </div>
           <div className="col-md-3 order-3 order-md-3 right-sidebar sidebar py-4">

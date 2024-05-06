@@ -75,6 +75,9 @@ a {
   border-radius: 50%;
   border: 4px solid #8c00ce;
 }
+.user-head-module .user-head-image:hover {
+  border-color: gray;
+}
 .user-head-module .user-head-id {
   text-align: center;
 }
@@ -163,7 +166,7 @@ a {
     position: fixed;
     bottom: 40px;
     background: #3D0059;
-    bottom: 0;
+    bottom: -1px;
     height: 30px;
     padding: 0px !important;
     border-top: 1px solid #310048;
@@ -192,6 +195,9 @@ a {
   .main-header {
     margin-top: 70px;
   }
+  .main-home {
+    padding: 0 5% !important;
+  }
 }
 body {
   background: rgb(0, 0, 0);
@@ -204,7 +210,7 @@ body {
   border-right: 1px solid #310048;
 }
 .left-sidebar .logo {
-  width: 100%;
+  width: 90%;
 }
 .left-sidebar .logo img {
   -o-object-fit: cover;
@@ -242,6 +248,10 @@ body {
 }
 .main-header ul li {
   display: inline-block;
+}
+
+.main-home {
+  padding: 0 20%;
 }
 
 .mobile-header {
