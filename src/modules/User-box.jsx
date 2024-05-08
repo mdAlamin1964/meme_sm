@@ -1,14 +1,14 @@
-export default function user_box() {
+export default function user_box({user_id, user_name, user_image}) {
     return (
         <>
             <div className="user-box-module mb-3">
                 <div className="user-name-image">
                     <div className="user-image">
-                        <img className='' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ75Q9EvClA_AXpsxkvrXrLRQS6iLAI-Y_MV9FKjZDSEw&s" alt="" />
+                        <img className='' src={user_image} alt="" />
                     </div>
                     <div className="user-info">
-                        <p className='user-id'>__md__alamin</p>
-                        <p className="user-name">Md Al-amin</p>
+                        <p className='user-id'>{user_id}</p>
+                        <p className="user-name">{user_name}</p>
                     </div>
                 </div>
                 <div className="user-switch-link">

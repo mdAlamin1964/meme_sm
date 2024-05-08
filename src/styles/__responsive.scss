@@ -14,7 +14,9 @@ $mobile-max-width: 768px;
 
     // Middle side bar
     
-
+    .middle-sidebar {
+        margin-left: 0 !important;
+    }
 
 
 
@@ -30,7 +32,10 @@ $mobile-max-width: 768px;
         height: 30px;
         padding: 0px !important;
         border-top: 1px solid $default-border-color;
+        border-right: none;
+        background: $mobile-header-background !important;
         .left-sidebar {
+            padding-top: 0 !important;
             .logo {
                 display: none;
             }

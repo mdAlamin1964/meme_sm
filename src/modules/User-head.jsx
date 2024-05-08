@@ -1,9 +1,9 @@
-export default function user_head() {
+export default function user_head({user_name, user_image}) {
     return (
         <>
             <div className="user-head-module">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ75Q9EvClA_AXpsxkvrXrLRQS6iLAI-Y_MV9FKjZDSEw&s" alt="" className="user-head-image mb-2" />
-                <p className="user-head-id">mdalamin</p>
+                <img src={user_image} alt="" className="user-head-image mb-2" />
+                <p className="user-head-id">{user_name}</p>
             </div>
         </>
     )

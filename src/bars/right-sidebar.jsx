@@ -1,11 +1,11 @@
 import React from 'react'
 import User_box from '../modules/User-box'
-export default function right_sidebar() {
+export default function right_sidebar({current_user, suggested_friends}) {
     return (
         <>
             <div className="container">
                 <div className="right-sidebar-user">
-                    <User_box />
+                    {current_user}
                 </div>
 
                 <div className="right-sidebar-suggested mt-4 ">
@@ -17,11 +17,8 @@ export default function right_sidebar() {
                             <a href="#" className='white-link-hover' >See all</a>
                         </div>
                     </div>
-                    
-                    <User_box />
-                    <User_box />
-                    <User_box />
-                    <User_box />
+                    {/* Suggesten friends */}
+                    {suggested_friends}
                 </div>
             </div>
         </>

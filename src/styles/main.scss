@@ -24,39 +24,43 @@ body {
 
 
 // Left side bar
-.left-sidebar {
-    height: 100vh;
+.left-sidebar-col {
+    position: fixed;
+    @include primary-backround;
     border-right: 1px solid $default-border-color;
-    .logo {
-        width: 90%;
-        img{
-            object-fit: cover;
-            width: 100%;
+
+    .left-sidebar {
+        height: 100vh;
+        .logo {
+            width: 90%;
+            img{
+                object-fit: cover;
+                width: 100%;
+            }
+        }
+    }
+
+
+    .left-sidebar-menu {
+        ul {
+            li {
+                margin-bottom: $default-list-margin-bottom;
+            }
+        }
+    }
+
+
+    .left-sidebar-bottom {
+        position: absolute;
+        bottom: 0;
+
+        ul {
+            li {
+                margin-bottom: $default-list-margin-bottom;
+            }
         }
     }
 }
-
-
-.left-sidebar-menu {
-    ul {
-        li {
-            margin-bottom: $default-list-margin-bottom;
-        }
-    }
-}
-
-
-.left-sidebar-bottom {
-    position: absolute;
-    bottom: 0;
-
-    ul {
-        li {
-            margin-bottom: $default-list-margin-bottom;
-        }
-    }
-}
-
 
 
 
@@ -109,10 +113,13 @@ body {
 
 
 // Middle sidebar
-
-.main-home {
-    padding: 0 20%;
+.middle-sidebar {
+    margin-left: 16.6%;
+    .main-home {
+        padding: 0 20%;
+    }
 }
+
 
 
 

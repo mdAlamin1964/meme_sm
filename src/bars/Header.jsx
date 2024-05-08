@@ -1,15 +1,11 @@
 import React from "react"
 import User_head from "../modules/User-head";
-function header() {
+function header({user_friends}) {
     return (
         <>
             <div className="main-header py-4">
                 <ul>
-                    <li><User_head /></li>
-                    <li><User_head /></li>
-                    <li><User_head /></li>
-                    <li><User_head /></li>
-                    <li><User_head /></li>
+                    {user_friends}
                 </ul>
             </div>
         </>
