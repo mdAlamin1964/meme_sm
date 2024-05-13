@@ -1,19 +1,108 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import data from './data';
 import Footer from './bars/Footer';
 import Header from './bars/Header';
 import Home from './pages/Home';
+import Login_module from './modules/Login';
 import Left_sidebar from './bars/left-sidebar';
 import Mobile_header from './bars/Header-mobile';
 import { nanoid } from 'nanoid';
+import New_post from './modules/New-post';
+import Profile from './pages/Profile';
 import Right_sidebar from './bars/right-sidebar';
+import Register_module from './modules/Register';
 import User_head from './modules/User-head';
 import User_box from './modules/User-box';
+import User_post from './modules/User-post';
 import './styles/main.css'
+import data from './data'
+
 
 
 function app() {
+
+  // Backend////
+  const backendURL = "http://localhost:5000"
+
+
+  // User All data fetch
+  const [loading, setLoading] = React.useState(false)
+  const [userData, setUserData] = React.useState("")
+  React.useEffect(()=> {
+    const datafetch = async ()=>  {
+      const data = await (
+        await fetch(backendURL + '/userData')
+      ).json()
+      setUserData(data)
+      setLoading(true)
+    }
+    datafetch()
+  }, [])
+
+console.log(userData)
+
+
+// Home page data fetch
+
+const [loadingHome, setLoadingHome] = React.useState(false)
+const [homeData, setHomeData] = React.useState('')
+React.useEffect(()=> {
+  const datafetch = async ()=> {
+    const data = await (
+      await fetch(`${backendURL}/homeData`)
+    ).json()
+    setHomeData(data)
+    setLoadingHome(true)
+  }
+  datafetch()
+},[])
+
+
+var home_posts = undefined
+if(loadingHome){
+  var home_data_shorted = homeData.sort((a,b)=> b.id-a.id)
+  home_posts = home_data_shorted.map(n=> {
+    return (
+      <User_post 
+        key={nanoid()}
+        comment_url = {`${backendURL}/post-comment`}
+        post_data = {n}
+        post_image_url = {`${backendURL}/${n.user_name}/${n.id}/${n.post_image}`}
+        user_image_url = {`${backendURL}/${n.user_name}/${n.user_image}`}
+      />
+    )
+  })
+}
+
+
+
+
+
+
+
+
+
+
+var user_all_post = undefined
+
+// User all post
+if (loading) { 
+  user_all_post = userData.userAllPosts.map(n=> {
+    var postImage = `${backendURL}/${n.user_name}/${n.id}/${n.file_name}`
+    return (
+      <li key={nanoid()}>
+        <img src={postImage} alt="" />
+        <a href="#"><button className="secondery-btn mt-1">see post</button></a>
+    </li>
+    )
+  })
+}
+
+
+
+
+
+
   // Window innerWidth
   const[currentWidth, setCurrentWidth] = React.useState(window.innerWidth)
   
@@ -27,17 +116,19 @@ function app() {
   
 
   // Header user friends
-  const header_heads = data.slice(0,5).map(n => {
-    return (
-      <li key={nanoid()}> 
-        <User_head 
-          user_name = {n.name}
-          user_image = {"https://i.pinimg.com/236x/52/26/a3/5226a34b76bb1da8fbddaf9f145a004b.jpg"}
-        />   
-      </li>
-    )
-  })
-
+  var header_heads =undefined
+  if (loading) {
+    header_heads = userData.userAllFriends.slice(0,5).map(n => {
+      return (
+        <li key={nanoid()}> 
+          <User_head 
+            user_name = {n.fullName}
+            user_image = {`${backendURL}/${n.userName}/${n.userImageUrl}`}
+          />   
+        </li>
+      )
+    })
+    }
 
 
 
@@ -72,6 +163,9 @@ function app() {
 
 
 
+
+
+
   return (
     <>
       {/* Main Body */}
@@ -88,14 +182,26 @@ function app() {
             <Header 
               user_friends = {header_heads}
             /> 
-            <Home />
+            <Home 
+              posts = {home_posts}
+            
+            />
+            <Profile 
+             newPost = {<New_post/>}
+             userData = {userData}
+             userImage = {backendURL+"/"+userData.userName+"/"+userData.userImageUrl}
+             user_all_post = {user_all_post}
+            />
           </div>
-          <div className="col-md-3 order-3 order-md-3 right-sidebar sidebar py-4">
+          <div className="col-md-3 order-3 order-md-3 right-sidebar-col sidebar py-4">
             <Right_sidebar 
               current_user = {current_user}
-
               suggested_friends = {suggested_friends}
             />
+            <div className="login-register mt-4 px-2 py-2">
+               <Login_module />
+               <Register_module />
+            </div>
           </div>
         </div>
       </div>

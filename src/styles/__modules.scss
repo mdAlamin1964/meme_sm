@@ -13,6 +13,7 @@
                 border-radius: 50%;
                 margin-right: .4em;
                 border: 1px solid $default-border-color;
+                
             }
         }
 
@@ -45,7 +46,8 @@
 // User Head Modules
 .user-head-module {
     .user-head-image {
-        max-width: 60px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         @include gradient-border;
         &:hover {
@@ -81,9 +83,11 @@
             display: inline-flex;
             align-items: center;
             img {
-                max-width: 20px;
+                width: 40px;
                 border-radius: 50%;
                 margin-right: 10px;
+                object-fit: cover;
+                height: 40px;
             }
             .user-post-id {
                 font-weight: 600;
@@ -160,5 +164,43 @@
                 float: right;
             }
         }
+    }
+}
+
+
+
+
+
+
+
+
+// new-post-module
+.new-post-module {
+    .new-post-form {
+        .input-dft {
+            margin: 2px 0px !important;
+        }
+        input[type="file"]::file-selector-button {
+            border-radius: 4px;
+            padding: 0 16px;
+            height: 40px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.16);
+            box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+            margin-right: 16px;
+            transition: background-color 200ms;
+          }
+          
+          /* file upload button hover state */
+          input[type="file"]::file-selector-button:hover {
+            background-color: #f3f4f6;
+          }
+          
+          /* file upload button active state */
+          input[type="file"]::file-selector-button:active {
+            background-color: #e5e7eb;
+          }
+          
     }
 }

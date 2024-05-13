@@ -1,12 +1,15 @@
-export default function user_post() {
+export default function user_post({comment_url,post_data, post_image_url, user_image_url}) {
     return (
         <>
             <div className="user-post mb-4">
                 <div className="post-heading mb-2">
                     <div className="image-name">
-                        <img className="user-post-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ75Q9EvClA_AXpsxkvrXrLRQS6iLAI-Y_MV9FKjZDSEw&s" alt="" />
-                        <p className="user-post-id" >mdalamin</p>
-                        <p className="user-post-timeago icon-link"><span class="material-symbols-outlined">fiber_manual_record</span><span className="time-number">14</span><span className="time-format">h</span>
+                        <img className="user-post-image" src={user_image_url} alt="" />
+                        <p className="user-post-id" >{post_data.user_name}</p>
+                        <p className="user-post-timeago icon-link">
+                            {/* <span class="material-symbols-outlined"></span>
+                            <span className="time-number">14</span> */}
+                            <span className="time-format">{post_data.date.slice(0,16)}</span>
                         </p>
                     </div>
                     <div className="post-menus">
@@ -16,7 +19,7 @@ export default function user_post() {
                     </div>
                 </div>
                 <div className="post-main-image">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ75Q9EvClA_AXpsxkvrXrLRQS6iLAI-Y_MV9FKjZDSEw&s" alt="" />
+                    <img src={post_image_url} alt="" />
                 </div>
                 <div className="post-bottom-info">
                     <div className="top my-2">
@@ -37,15 +40,15 @@ export default function user_post() {
                     </div>
                     <div className="post-description">
                         <div className="post-by">
-                            <p>liked by __<span>friends</span> and others</p>
+                            <p>liked by __<span>{post_data.liked_by}</span> and others</p>
                         </div>
                         <div className="post-details my-2">
-                            <p><span className="user-id"><b>__md__alamin</b></span> <span className="post-details-text">I highly recommend you to follow @philrypz & send him a DM with „READY“ to learn how you can build an automated side...</span></p>
+                            <p><span className="user-id"><b>{post_data.user_name}</b></span> <span className="post-details-text">{post_data.description}</span></p>
                         </div>
                     </div>
                     <div className="post-comment">
                         <div className="comment-text">
-                            <form action="#">
+                            <form action={comment_url} encType="multipart/form-data" method="POST" >
                                 <input type="text" placeholder="Add a comment..." />
                                 <button className="default-btn" type="submit">Post</button>
                             </form>

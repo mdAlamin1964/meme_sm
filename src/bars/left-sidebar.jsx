@@ -12,7 +12,7 @@ export default function left_sidebar() {
                         <ul>
                             <li>
                                 <a href="#" className="white-link-hover">
-                                    <p className="icon-text"><span class="material-symbols-outlined me-1">home</span><span className="left-menu-text">Home</span></p>
+                                    <p className="icon-text"><span class="material-symbols-outlined me-1">home</span><span className="left-menu-text active">Home</span></p>
                                 </a>
                             </li>
                             <li>

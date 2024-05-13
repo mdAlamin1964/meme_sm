@@ -10,8 +10,8 @@ $mobile-header-background: #7D3A5B;
 
 
 @mixin primary-backround{
-    background: rgb(66,37,67);
-    background: linear-gradient(0deg, rgba(66,37,67,1) 6%, rgba(125,58,91,1) 34%, rgba(66,37,67,1) 80%);
+    background: rgb(119, 28, 122);
+    background: linear-gradient(0deg, rgb(89, 34, 91) 6%, rgba(125,58,91,1) 34%, rgb(86, 14, 88) 80%);
     background-attachment: fixed;
 
 }
@@ -53,10 +53,21 @@ $mobile-header-background: #7D3A5B;
 
 .white-link-hover {
     color: $primary-text-color;
-    &:hover {
-        opacity: 0.7;
+}
+
+
+.icon-text {
+    .left-menu-text {
+        width: 0px;
+        overflow: hidden;
+        transition: 1s;
+    }
+    &:hover .left-menu-text, .active {
+        width: 100%;
     }
 }
+
+
 
 
 .default-btn {
@@ -68,6 +79,32 @@ $mobile-header-background: #7D3A5B;
         opacity: 0.8;
     };
 }
+
+
+.secondery-btn {
+    padding: 5px 10px;
+    border:none;
+    border-radius: 5px;
+    background: $secondary-text-color;
+    &:hover {
+        background-color: $primary-text-color;
+    }
+}
+
+.user-logout-btn {
+    background-color: rgb(42, 42, 42);
+    color:white;
+    &:hover {
+        background-color: black;
+    }
+}
+
+
+
+.input-dft {
+    @include input-style-0;
+}
+
 
 
 

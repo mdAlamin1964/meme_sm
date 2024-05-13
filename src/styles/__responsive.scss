@@ -2,7 +2,7 @@ $mobile-max-width: 768px;
 
 @media only screen and (max-width: $mobile-max-width) {
     // Right side bar
-    .right-sidebar {
+    .right-sidebar-col {
         display: none;
     }
 
@@ -80,8 +80,30 @@ $mobile-max-width: 768px;
 
 
 
-    // Main home
+    // Page - Main home page
     .main-home{
         padding: 0 5%!important;
     }
+
+
+
+
+
+    // Page - profile
+    .user-profile {
+        .user-all-post {
+            ul li {
+                width: 80%;
+                margin: auto;
+                display: block;
+                margin-bottom: 40px;
+                img{
+                    height: auto;
+                }
+            }
+
+        }
+    }
+
+
 }

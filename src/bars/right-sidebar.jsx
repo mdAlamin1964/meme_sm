@@ -1,5 +1,4 @@
 import React from 'react'
-import User_box from '../modules/User-box'
 export default function right_sidebar({current_user, suggested_friends}) {
     return (
         <>
