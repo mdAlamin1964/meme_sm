@@ -2,12 +2,16 @@
   color: #fff;
 }
 
-.icon-text .left-menu-text {
+.white-link-hover .left-menu-text {
   width: 0px;
   overflow: hidden;
   transition: 1s;
 }
-.icon-text:hover .left-menu-text, .icon-text .active {
+.white-link-hover:hover .left-menu-text {
+  width: 100%;
+}
+
+.active .left-menu-text {
   width: 100%;
 }
 
@@ -26,9 +30,14 @@
   border: none;
   border-radius: 5px;
   background: rgb(0, 219, 197);
+  width: 100%;
 }
 .secondery-btn:hover {
   background-color: #fff;
+}
+
+.delete-btn {
+  background-color: rgb(255, 129, 129);
 }
 
 .user-logout-btn {
@@ -36,7 +45,7 @@
   color: white;
 }
 .user-logout-btn:hover {
-  background-color: black;
+  background-color: rgb(255, 129, 129);
 }
 
 .input-dft {
@@ -65,6 +74,69 @@
   display: flex;
   align-items: center;
   margin-bottom: 0;
+}
+
+.liked-icon {
+  color: rgb(0, 219, 197) !important;
+}
+
+.icon-link .material-symbols-outlined {
+  font-size: 24px;
+  height: 40px;
+  width: 35px;
+  cursor: pointer;
+}
+.icon-link .material-symbols-outlined:hover {
+  font-size: 2.5em;
+}
+
+.gray-out-text {
+  color: gray;
+  margin-bottom: 1em;
+  font-size: 12px;
+  margin-bottom: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.pointer:hover {
+  opacity: 0.7;
+}
+
+.title-1 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.pop-in-middle-screen {
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4352941176);
+}
+.pop-in-middle-screen > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: black;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  width: 500px;
+}
+.pop-in-middle-screen > div .new-post-title p {
+  display: inline-block;
+}
+.pop-in-middle-screen > div .new-post-title .icon-link {
+  float: right;
+}
+
+.friends-profile .user-image img {
+  width: 100%;
+  border-radius: 7px;
 }
 
 * {
@@ -103,10 +175,13 @@ a {
   font-size: 0.8em;
 }
 .user-box-module .user-name-image .user-image img {
-  max-width: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 0.4em;
-  border: 1px solid #310048;
+  border: 1px solid #371b44;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .user-box-module .user-name-image .user-info .user-name {
   color: gray;
@@ -114,19 +189,18 @@ a {
 .user-box-module .user-switch-link {
   display: inline-block;
   float: right;
+  padding: 10px 0;
 }
 
 .user-head-module .user-head-image {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: conic-gradient(from 288deg at 94% 54%, #CDB3D6 75%, #7D3A5B 100%, transparent 100%);
-  border-radius: 50px;
-  padding: 4px;
-  box-sizing: content-box;
-}
-.user-head-module .user-head-image:hover {
-  background: conic-gradient(from 288deg at 94% 54%, #fffcfc 75%, #7D3A5B 100%, transparent 100%);
+  border: 4px solid #371b44;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: top;
+     object-position: top;
 }
 .user-head-module .user-head-image:hover {
   border-color: gray;
@@ -136,7 +210,7 @@ a {
 }
 
 .user-post {
-  border-bottom: 1px solid #310048;
+  border-bottom: 1px solid #371b44;
   padding-bottom: 15px;
 }
 .user-post .post-heading .image-name {
@@ -182,8 +256,8 @@ a {
   display: inline-block;
   float: right;
 }
-.user-post .post-bottom-info .post-description span {
-  font-size: 12px;
+.user-post .post-bottom-info .post-description .post-by .user_like {
+  color: gray;
 }
 .user-post .post-bottom-info .post-comment .comment-text {
   width: 90%;
@@ -214,6 +288,10 @@ a {
   float: right;
 }
 
+.user-own-post {
+  max-width: 500px;
+  margin: auto;
+}
 .new-post-module .new-post-form {
   /* file upload button hover state */
   /* file upload button active state */
@@ -239,16 +317,39 @@ a {
   background-color: #e5e7eb;
 }
 
+.friend-single-post .post-menus {
+  display: none !important;
+}
+.friend-single-post .top-right {
+  display: none !important;
+}
+.friend-single-post .post-main-image img {
+  max-height: 300px;
+}
+
+.user-profile {
+  max-width: 500px;
+  margin: auto;
+}
 .user-profile .user-image {
   overflow: hidden;
 }
 .user-profile .user-image img {
-  width: 200px;
-  height: 200px;
+  width: 140px;
+  height: 140px;
   display: block;
   border-radius: 50%;
   -o-object-fit: cover;
      object-fit: cover;
+}
+.user-profile .user-info h2 {
+  margin: 0px;
+  line-height: 1em;
+}
+.user-profile .user-info .user-name {
+  color: gray;
+  margin-bottom: 1em;
+  font-size: 12px;
 }
 .user-profile .user-all-post ul li {
   width: 24%;
@@ -262,14 +363,6 @@ a {
   -o-object-fit: cover;
      object-fit: cover;
 }
-.user-profile .user-info {
-  position: relative;
-}
-.user-profile .user-info .user-logout-btn {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
 
 @media only screen and (max-width: 768px) {
   .right-sidebar-col {
@@ -281,13 +374,13 @@ a {
   .left-sidebar-col {
     position: fixed;
     bottom: 40px;
-    background: #7D3A5B;
+    background: #b7226c;
     bottom: -1px;
     height: 30px;
     padding: 0px !important;
-    border-top: 1px solid #310048;
+    border-top: 1px solid #371b44;
     border-right: none;
-    background: #7D3A5B !important;
+    background: #b7226c !important;
   }
   .left-sidebar-col .left-sidebar {
     padding-top: 0 !important;
@@ -319,6 +412,11 @@ a {
   .main-home {
     padding: 0 5% !important;
   }
+  .user-profile {
+    max-width: 500px;
+    margin: auto;
+    margin-top: 70px;
+  }
   .user-profile .user-all-post ul li {
     width: 80%;
     margin: auto;
@@ -328,20 +426,26 @@ a {
   .user-profile .user-all-post ul li img {
     height: auto;
   }
+  .pop-in-middle-screen > div {
+    width: 95%;
+  }
+  .friends-profile .user-image img {
+    max-width: 300px;
+  }
 }
 body {
-  background: rgb(119, 28, 122);
-  background: linear-gradient(0deg, rgb(89, 34, 91) 6%, rgb(125, 58, 91) 34%, rgb(86, 14, 88) 80%);
+  background: rgb(6, 0, 6);
+  background: linear-gradient(0deg, rgb(0, 0, 0) 6%, rgb(50, 22, 37) 34%, rgb(0, 0, 0) 80%);
   background-attachment: fixed;
   color: #fff;
 }
 
 .left-sidebar-col {
   position: fixed;
-  background: rgb(119, 28, 122);
-  background: linear-gradient(0deg, rgb(89, 34, 91) 6%, rgb(125, 58, 91) 34%, rgb(86, 14, 88) 80%);
+  background: rgb(6, 0, 6);
+  background: linear-gradient(0deg, rgb(0, 0, 0) 6%, rgb(50, 22, 37) 34%, rgb(0, 0, 0) 80%);
   background-attachment: fixed;
-  border-right: 1px solid #310048;
+  border-right: 1px solid #371b44;
 }
 .left-sidebar-col .left-sidebar {
   height: 100vh;
@@ -356,6 +460,13 @@ body {
 }
 .left-sidebar-col .left-sidebar-menu ul li {
   margin-bottom: 1.5em;
+  cursor: pointer;
+}
+.left-sidebar-col .left-sidebar-menu ul li p {
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 .left-sidebar-col .left-sidebar-bottom {
   position: absolute;
@@ -364,21 +475,28 @@ body {
 }
 .left-sidebar-col .left-sidebar-bottom ul li {
   margin-bottom: 1.5em;
+  cursor: pointer;
+}
+.left-sidebar-col .left-sidebar-bottom ul li p {
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .right-sidebar-col {
   position: fixed;
-  background: rgb(119, 28, 122);
-  background: linear-gradient(0deg, rgb(89, 34, 91) 6%, rgb(125, 58, 91) 34%, rgb(86, 14, 88) 80%);
+  background: rgb(6, 0, 6);
+  background: linear-gradient(0deg, rgb(0, 0, 0) 6%, rgb(50, 22, 37) 34%, rgb(0, 0, 0) 80%);
   background-attachment: fixed;
-  border-left: 1px solid #310048;
+  border-left: 1px solid #371b44;
   right: 0;
   height: 100vh;
   padding-left: 0px;
   padding-right: 0px;
 }
 .right-sidebar-col .login-register {
-  border-top: 1px solid #310048;
+  border-top: 1px solid #371b44;
 }
 
 .right-sidebar-suggested-text {
@@ -411,8 +529,8 @@ body {
 .mobile-header {
   position: fixed;
   width: 100%;
-  border-bottom: 1px solid #310048;
-  background: #7D3A5B;
+  border-bottom: 1px solid #371b44;
+  background: #b7226c;
 }
 .mobile-header .row {
   display: flex;

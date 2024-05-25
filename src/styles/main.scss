@@ -44,6 +44,11 @@ body {
         ul {
             li {
                 margin-bottom: $default-list-margin-bottom;
+                cursor: pointer;
+                p {
+                    pointer-events: none;
+                    user-select: none;
+                }
             }
         }
     }
@@ -56,6 +61,11 @@ body {
         ul {
             li {
                 margin-bottom: $default-list-margin-bottom;
+                cursor: pointer;
+                p {
+                    pointer-events: none;
+                    user-select: none;
+                }
             }
         }
     }
@@ -168,3 +178,6 @@ body {
         }
     }
 }
+
+
+

@@ -1,9 +1,9 @@
-export default function user_post({comment_url,post_data, post_image_url, user_image_url}) {
+export default function user_post({comment_url,post_data, post_image_url, user_image_url, handle_user_btn, handle_like_btn, liked_style, user_like}) {
     return (
-        <>
+        <>  
             <div className="user-post mb-4">
                 <div className="post-heading mb-2">
-                    <div className="image-name">
+                    <div className="image-name pointer" onClick={handle_user_btn()}>
                         <img className="user-post-image" src={user_image_url} alt="" />
                         <p className="user-post-id" >{post_data.user_name}</p>
                         <p className="user-post-timeago icon-link">
@@ -26,7 +26,9 @@ export default function user_post({comment_url,post_data, post_image_url, user_i
                         <div className="top-left">
                             <div className="icons">
                                 <p className="icon-link">
-                                    <span class="material-symbols-outlined">favorite</span>
+                                    <a>
+                                        <span onClick={handle_like_btn()} class={`material-symbols-outlined ${liked_style}`}>favorite</span>
+                                    </a>
                                     <span class="material-symbols-outlined">mode_comment</span>
                                     <span class="material-symbols-outlined">send</span>
                                 </p>
@@ -40,7 +42,7 @@ export default function user_post({comment_url,post_data, post_image_url, user_i
                     </div>
                     <div className="post-description">
                         <div className="post-by">
-                            <p>liked by __<span>{post_data.liked_by}</span> and others</p>
+                            <p>liked by__ <span className="user_like">{user_like}</span> {post_data.liked_by} others</p>
                         </div>
                         <div className="post-details my-2">
                             <p><span className="user-id"><b>{post_data.user_name}</b></span> <span className="post-details-text">{post_data.description}</span></p>

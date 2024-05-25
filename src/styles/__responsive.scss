@@ -72,7 +72,7 @@ $mobile-max-width: 768px;
 
     // Header
     .main-header {
-        margin-top: 70px;
+        margin-top: $mobile_header_give_space;
     }
 
 
@@ -91,6 +91,9 @@ $mobile-max-width: 768px;
 
     // Page - profile
     .user-profile {
+        max-width: $mobile_content_max_width;
+        margin: auto;
+        margin-top: $mobile_header_give_space;
         .user-all-post {
             ul li {
                 width: 80%;
@@ -104,6 +107,27 @@ $mobile-max-width: 768px;
 
         }
     }
+
+
+
+
+    // Pop up style
+    .pop-in-middle-screen > div{
+        width: 95%;
+    }
+
+
+
+    // Friends profile
+    .friends-profile {
+        .user-image {
+            img {
+                max-width: 300px;
+            }
+        }
+    }
+
+
 
 
 }

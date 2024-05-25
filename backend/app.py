@@ -1,8 +1,11 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, make_response, Response
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+import random
 
 app = Flask(__name__)
+CORS(app)
 app.debug = True
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -26,17 +29,21 @@ class User(db.Model):
     def __repr__(self):
         return f"{self.userName}"
 
-print(datetime.utcnow().replace(microsecond=0))
 
-# User post
+
+# User post 
 class User_post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(50))
     file_name = db.Column(db.String(100))
     data = db.Column(db.LargeBinary)
     description = db.Column(db.String(500))
-    date = db.Column(db.DateTime(), default=datetime.now().replace(microsecond=0))
-    liked_by=db.Column(db.Integer)
+    date = db.Column(db.DateTime(), default = datetime.now().replace(microsecond=0))
+    liked_by = db.Column(db.Integer, default=0) 
+    liked_by_users = db.Column(db.String(5000), default="")
+    
+    def __repr__(self):
+        return f"{self.user_name}"
 
 
 
@@ -92,22 +99,41 @@ logged_user = {
 
 
 
-#Data
-@app.route('/data')
-def data():
-    try:
-        current_user = User.query.filter_by(userName= logged_user['user']).first()
-        return build_actual_response(jsonify({
-            'id': current_user.userName,
-        }))
-    except Exception as e:
-       return render_template('failure.html', cause=e)
+
+def post_formate(i):
+    user_image = User.query.filter_by(userName=i.user_name).first()
+    return {
+        'id': i.id,
+        'user_name': i.user_name,
+        'file_name':i.file_name,
+        'description': i.description,
+        'date': i.date,
+        'liked_by': i.liked_by,
+        'liked_by_users': i.liked_by_users,
+        'user_image': user_image.user_image_name,
+        
+    }
+
+def profile_formate(i):
+    return {
+        'userName': i.userName,
+        'fullName': i.fullName,
+        'bDay': i.bDay,
+        'joinDate': i.joinDate,
+        'userImageUrl': i.user_image_name,
+    }
 
 
 
 
 
 
+#validate info
+def validate_info(info):
+    if len(info) > 0:
+        return info
+    else:
+        return False
 
 
 
@@ -119,30 +145,54 @@ def data():
 def user_data():
     try:
         active_user= User.query.filter_by(userName= logged_user['user']).first()
-        user_all_posts = User_post.query.filter_by(user_name = logged_user['user']).all()
-        user_all_friends = User_friends.query.filter_by(user_name=logged_user['user']).all()
-        
-        friends = []
-        posts = []
-        for i in user_all_posts:
-            posts.append({
-                'id': i.id,
-                'user_name': i.user_name,
-                'file_name':i.file_name,
-                'description': i.description,
-                'date': i.date,
-                'liked_by': i.liked_by,
-            })
 
+        #user all post
+        user_all_posts = User_post.query.filter_by(user_name = logged_user['user']).all()
+
+        use_posts = []
+        for i in user_all_posts:
+            use_posts.append(post_formate(i))
+
+
+        #user all frineds
+        user_all_friends = User_friends.query.filter_by(user_name=logged_user['user']).all()
+
+        user_friends = []
+        user_friends_user_name = []
         for i in user_all_friends:
             friendList = User.query.filter_by(userName=i.user_friend).first()
-            friends.append({
-                'userName': friendList.userName,
-                'fullName': friendList.fullName,
-                'bDay': friendList.bDay,
-                'joinDate': friendList.joinDate,
-                'userImageUrl': friendList.user_image_name,
-            })
+            friend_post = User_post.query.filter_by(user_name=friendList.userName).all()
+            
+            user_friends_user_name.append(i.user_friend)
+
+            friend_all_post = []
+            for j in friend_post:
+                friend_all_post.append(post_formate(j))
+
+            user_friends.append({
+                'friend_profile' : profile_formate(friendList),
+                'user_friend_post':friend_all_post,
+                })
+        
+
+
+
+
+
+
+
+        # Suggested friend to show
+        suggested_frien_count = 12
+        suggested_friends = User.query.order_by(User.userName).all()
+        suggested_friends_list = random.sample(suggested_friends, (len(suggested_friends) if suggested_frien_count > len(suggested_friends) else suggested_frien_count))
+
+        suggested_friends_show = []
+        for i in suggested_friends_list:
+            i = str(i)
+            if i != logged_user['user'] and i not in user_friends_user_name:
+                suggest_user = User.query.filter_by(userName=i).first()
+                suggested_friends_show.append(profile_formate(suggest_user))
+
 
         return build_actual_response(jsonify({
             'id' : active_user.id,
@@ -151,8 +201,9 @@ def user_data():
             'bDay': active_user.bDay,
             'joinDate': active_user.joinDate,
             'userImageUrl': active_user.user_image_name,
-            'userAllPosts': posts,
-            'userAllFriends': friends,
+            'userAllPosts': use_posts,
+            'userAllFriends': user_friends,
+            'suggested_friends': suggested_friends_show,
         }))
     except Exception as e:
        return render_template('failure.html', cause=e)
@@ -165,40 +216,34 @@ def user_data():
 def home_data():
     try:
         user_friends_list = User_friends.query.filter_by(user_name=logged_user['user']).all()
+
+
         all_friends_post=[]
 
         #adding friends post
         for i in user_friends_list:
             friend_posts = User_post.query.filter_by(user_name=i.user_friend).all()
+            friend_profile = User.query.filter_by(userName=i.user_friend).first()
 
             for j in friend_posts:
-                user_image = User.query.filter_by(userName=j.user_name).first()
                 all_friends_post.append({
-                    'id':j.id,
-                    'user_name': j.user_name,
-                    'post_image': j.file_name,
-                    'description': j.description,
-                    'date': j.date,
-                    'liked_by':j.liked_by,
-                    'user_image': user_image.user_image_name,
-                })
+                    'post':post_formate(j),
+                    'profile': profile_formate(friend_profile),
+                    })
          
         # adding User own post
         user_own_post = User_post.query.filter_by(user_name=logged_user['user']).all()
-        user_image = User.query.filter_by(userName=logged_user['user']).first()
+        user_profile = User.query.filter_by(userName=logged_user['user']).first()
         for j in user_own_post:
             all_friends_post.append({
-                'id':j.id,
-                'user_name': j.user_name,
-                'post_image': j.file_name,
-                'description': j.description,
-                'date': j.date,
-                'liked_by':j.liked_by,
-                'user_image': user_image.user_image_name,
-            })
+                    'post':post_formate(j),
+                    'profile': profile_formate(user_profile),
+                    })
 
-
-        return build_actual_response(jsonify(all_friends_post))
+        if user_friends_list:
+            return build_actual_response(jsonify(all_friends_post))
+        else:
+            raise ValueError('Invalid user')
     except Exception as e:
        return render_template('failure.html', cause=e)
 
@@ -208,7 +253,7 @@ def home_data():
 
 
 #User profile image
-@app.route('/<string:user>/<string:url>')
+@app.route('/profile/<string:user>/<string:url>')
 def get_image(user,url):
     try:
         active_user= User.query.filter_by(userName= user, user_image_name = url).first()
@@ -219,7 +264,7 @@ def get_image(user,url):
 
 
 #user post Image show
-@app.route('/<string:user>/<int:id>/<string:url>')
+@app.route('/post/<string:user>/<int:id>/<string:url>')
 def post_image(user,id, url):
     try:
         c_user_post_image = User_post.query.filter_by(user_name=user, id=id, file_name=url).first()
@@ -253,6 +298,8 @@ def register():
     return redirect(FRONTEND)
 
 
+
+
 #uplad files to server
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -273,20 +320,82 @@ def upload():
 
 
 
+# Deleteing user post
+@app.route('/delete-post/<int:id>')
+def delete_post(id):
+    try:
+        post_del = User_post.query.filter_by(id=id, user_name=logged_user['user']).first()
+        
+        db.session.delete(post_del)
+        db.session.commit()
+        return redirect(FRONTEND)
+    except Exception as e:
+        return render_template('failure.html', cause=e)
 
 
-@app.route('/post-comment', methods=['POST'])
-def post_comment():
-    return "yes"
 
 
 
 
 
-#failure attempt
-@app.route("/failure")
-def failure():
-    return render_template("failure.html")
+# Adding new frineds
+@app.route('/add-friend/<string:friend>')
+def add_friends(friend):
+    try:
+        add_new_friend = User_friends(user_name=logged_user['user'], user_friend=friend)
+
+        db.session.add(add_new_friend)
+        db.session.commit()
+        return redirect(FRONTEND)
+    except Exception as e:
+        return render_template('failure.html', cause=e)
+
+
+
+#removing friend
+@app.route('/remove-friend/<string:user>')
+def remove_friends(user):
+    try:
+        remove_friend = User_friends.query.filter_by(user_name=logged_user['user'], user_friend = user).first()
+
+        db.session.delete(remove_friend)
+        db.session.commit()
+
+        return redirect(FRONTEND)
+    except Exception as e:
+        return render_template('failure.html', cause=e)
+
+
+
+
+
+
+#Update user Data
+@app.route('/update-userData', methods=['POST', 'GET'])
+def update_userData():
+    try:
+        new_name = request.form.get('update-name')
+        new_bday = request.form.get('update-bday')
+        new_image = request.files['update-photo']
+        
+        user = User.query.filter_by(userName=logged_user['user']).first()
+
+        if validate_info(new_name):
+            user.fullName= new_name
+        if validate_info(new_bday):
+            user.bDay = new_bday
+        if new_image:
+            user.user_image = new_image.read()
+            user.user_image_name = new_image.filename
+
+        db.session.commit()
+        return redirect(FRONTEND)
+
+    except Exception as e:
+        return render_template('failure.html', cause=e)
+
+
+
 
 
 
@@ -311,13 +420,6 @@ def login():
 
 
 
-# # Seting up data for frontend
-# @app.route('/data')
-# def data():
-#     try:
-
-
-
 
 
 @app.route('/logout')
@@ -325,6 +427,104 @@ def logout():
     session.clear()
     logged_user['user'] = None
     return redirect(FRONTEND)
+
+
+
+
+
+
+
+
+
+
+
+#Liked by feature
+@app.route('/like/<int:id>')
+def liked_post(id):
+    try:
+        post = User_post.query.filter_by(id=id).first()
+        likes_split = post.liked_by_users.split(',')
+
+        #removing emply list item
+        all_likes = list(filter(None, likes_split))
+        
+        print(all_likes)
+        
+        print(logged_user['user'] in all_likes)
+        if str(logged_user['user']) in all_likes:
+            post.liked_by -= 1
+            all_likes.remove(logged_user['user'])
+        else:
+            post.liked_by += 1
+            all_likes.append(logged_user['user'])
+            
+        post.liked_by_users = ",".join(all_likes)
+
+        print(len(all_likes), all_likes)
+        db.session.commit()
+        return build_actual_response(jsonify({
+            'total_likes': len(all_likes),
+            'liked_by' : all_likes,
+        }))
+    
+    except Exception as e:
+        return render_template('failure.html', cause=e)
+
+
+
+#liked remove by feature
+@app.route('/like-remove')
+def like_remove_post():
+    try:
+        post = User_post.query.order_by(User_post.id).all()
+        for i in post:
+            i.liked_by_users = ""
+
+        db.session.commit()
+        print(post)
+        return "Yes"
+    
+    except Exception as e:
+        return render_template('failure.html', cause=e)
+
+
+
+
+
+#public profile
+# @app.route('/public-profile/<string:user>')
+# def public_profile(user):
+#     try:
+#         user_profile = User.query.filter_by(userName=user).first()
+#         all_post = []
+
+
+#         return build_actual_response(jsonify({
+#             'profile' :profile_formate(user_profile),
+#             'posts' : post_formate()
+#         }))
+#     except Exception as e:
+#         return render_template('failure.html', cause=e)
+
+
+
+
+
+
+
+
+#comment sactions
+@app.route('/post-comment', methods=['POST'])
+def post_comment():
+    return "yes"
+
+
+
+
+#failure attempt
+@app.route("/failure")
+def failure():
+    return render_template("failure.html")
 
 
 

@@ -9,11 +9,12 @@
         .user-image {
         
             img {
-                max-width: 40px;
+                width: 50px;
+                height: 50px;
                 border-radius: 50%;
                 margin-right: .4em;
                 border: 1px solid $default-border-color;
-                
+                object-fit: cover;
             }
         }
 
@@ -27,6 +28,7 @@
     .user-switch-link {
         display: inline-block;
         float: right;
+        padding: 10px 0;
     }
 }
 
@@ -50,6 +52,8 @@
         height: 60px;
         border-radius: 50%;
         @include gradient-border;
+        object-fit: cover;
+        object-position: top;
         &:hover {
             border-color: $gray-text-color;
         }
@@ -131,10 +135,13 @@
         }
 
         .post-description {
+            .post-by{
 
-            span {
-                font-size: $default-user-font-size;
+                .user_like {
+                    color: $gray-text-color;
+                }
             }
+            
         }
 
         .post-comment{
@@ -166,6 +173,32 @@
         }
     }
 }
+
+
+
+
+
+
+// user-own-post
+
+.user-own-post {
+    max-width: $mobile_content_max_width;
+    margin: auto;
+    .post-heading{
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -204,3 +237,36 @@
           
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// friend single post
+.friend-single-post {
+
+    .post-menus {
+        display: none !important;
+    }
+
+    .top-right {
+        display: none !important;
+    }
+    .post-main-image {
+        img {
+            max-height: 300px;
+        }
+    }
+}
+
+
+
