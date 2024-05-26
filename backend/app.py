@@ -399,9 +399,6 @@ def update_userData():
 
 
 
-
-
-
 #Loggin a user
 @app.route('/login', methods=["POST"])
 def login():
@@ -410,18 +407,18 @@ def login():
         if current_user.password == request.form['password']:
             session["userName"] = request.form['user']
             logged_user['user'] = session["userName"]
-            return redirect('http://localhost:5173/meme_sm/')
+            return redirect(FRONTEND)
         else:
             return render_template('failure.html', cause="incorrect password or user")
     except Exception as e:
-        return render_template('failure.html', cause=e)
+        return send_err("Loggin failed!")
 
 
 
 
 
 
-
+# Log out
 @app.route('/logout')
 def logout():
     session.clear()
@@ -491,26 +488,6 @@ def like_remove_post():
 
 
 
-#public profile
-# @app.route('/public-profile/<string:user>')
-# def public_profile(user):
-#     try:
-#         user_profile = User.query.filter_by(userName=user).first()
-#         all_post = []
-
-
-#         return build_actual_response(jsonify({
-#             'profile' :profile_formate(user_profile),
-#             'posts' : post_formate()
-#         }))
-#     except Exception as e:
-#         return render_template('failure.html', cause=e)
-
-
-
-
-
-
 
 
 #comment sactions
@@ -521,10 +498,16 @@ def post_comment():
 
 
 
-#failure attempt
-@app.route("/failure")
-def failure():
-    return render_template("failure.html")
+#sending error message
+def send_err(message):
+    return redirect(f'{FRONTEND}error_text/{message}')
+
+
+
+
+
+
+
 
 
 

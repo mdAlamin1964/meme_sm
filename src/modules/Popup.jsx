@@ -1,5 +1,6 @@
 export default function pop_up({main_pop_handle, data, log_reg_pop, additional_class}) {
-    return <>
+    return (
+    <>
         <div className={`pop-in-middle-screen ${additional_class}`} >
             <div className="pop-up-input-module mt-4">
                 <div className="new-post-title my-2">
@@ -13,4 +14,5 @@ export default function pop_up({main_pop_handle, data, log_reg_pop, additional_c
             </div>
         </div>
     </>
+    )
 }

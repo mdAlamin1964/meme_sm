@@ -1,4 +1,5 @@
 $big-icon-size: 24px;
+$color_alert: #CC3300;
 $primary-text-color: #fff;
 $secondary-text-color: rgb(0, 219, 197);
 $gray-text-color: gray;
@@ -175,6 +176,33 @@ $site_black_overlay: #0000006f;
 .title-1 {
     font-size: $title_font_size;
     font-weight: 500;
+}
+
+
+
+//Top-alert
+.top-alert {
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+    .top-alert-module {
+        max-width: 85%;
+        position: absolute;
+        left: 50%; 
+        transform: translate(-50%, -50%); 
+        background: $color_alert;
+        padding: 5px 40px;
+        border-radius: 0 0 5px 5px;
+        padding-top: 30px;
+        margin-top: 5px;
+
+        .alert-text {
+            color: $primary-text-color;
+            font-size: 1.2em;
+            font-weight: 300;
+            text-align: center;
+        }
+    }
 }
 
 

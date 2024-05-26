@@ -13,15 +13,18 @@ import Pop_up_profile from './modules/pop-up-profile';
 import Public_profile from './pages/Public-profile';
 import Right_sidebar from './bars/right-sidebar';
 import Register_module from './modules/Register';
+import Top_alert from './modules/Top_alert';
 import User_head from './modules/User-head';
 import User_box from './modules/User-box';
 import User_info_update from './modules/User-info-update';
 import User_post from './modules/User-post';
 import User_own_post from './modules/User-own-post';
 
+
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/main.css'
-import { json } from 'react-router-dom';
+
 
 
 
@@ -80,8 +83,9 @@ const [all_posts_user, set_all_posts_user] = React.useState(undefined)
 
 
 
-
-
+// Top alert
+const [top_alert_data, set_top_alert_data] = React.useState("")
+const [show_top_alert, set_show_top_alert] = React.useState(false)
 
 
 ///END REACT STATES
@@ -133,6 +137,11 @@ React.useEffect(()=> {
   }
   datafetch()
 },[reload])
+
+
+
+
+
 
 
 ///END data fetch////
@@ -257,22 +266,37 @@ function close_post(){
 
 
 
-
-
 // Handle login or register
 function registery_func() {
   set_log_reg_pop(true)
+
   set_main_pop(
     <Register_module 
       handle_register = {()=> login_func}
     />)
 }
+
+
+
 function login_func() {
   set_log_reg_pop(true)
+
+  function action_click() {
+    if (!loading_user) {
+      var check = current_window_url.split('/')
+      if (check[4] == 'error_text') {
+      }
+
+    }
+    
+  }
+
 
   set_main_pop(
     <Login_module 
       handle_register = {()=> registery_func}
+      handle_try = {()=> action_click}
+
     />)
 
 }
@@ -296,9 +320,21 @@ const user_update_pop_handle = ()=> {
 }
 
 
+const current_window_url = window.location.href;
+
+React.useEffect(()=> {
+  const timer = setTimeout(()=> {
+      set_show_top_alert(false)
+  }, 2000)
+  return ()=> clearTimeout(timer)
+}, [show_top_alert])
+
+
+
 ///END FUNCTIONS////
 
 
+console.log(top_alert_data, show_top_alert)
 
 
 
@@ -681,17 +717,21 @@ setting_page_body()
 
 
 
-
-
-
-
-
-
-
-
 ///PAGE MAIN RETURN//
   return (
-    <>
+    <>  
+        {/* Top alert */}
+        {show_top_alert?
+          <Top_alert
+            data={top_alert_data}
+          />
+          :
+
+          ""
+        }
+
+          
+
         {/* Site popups */}
         <div className="pop-up">
           {main_pop_show?
@@ -725,6 +765,10 @@ setting_page_body()
           </div>
         </div>
       </div>
+
+
+
+      
     </>
   )
 }
