@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './bars/Header';
 import Home from './pages/Home';
+import Home_overlay from './pages/Home_overlay';
 import Login_module from './modules/Login';
 import Left_sidebar from './bars/left-sidebar';
 import main_logo from './assets/Logo.png'
@@ -18,9 +19,6 @@ import User_head from './modules/User-head';
 import User_box from './modules/User-box';
 import User_info_update from './modules/User-info-update';
 import User_post from './modules/User-post';
-import User_own_post from './modules/User-own-post';
-
-
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/main.css'
@@ -29,13 +27,13 @@ import './styles/main.css'
 
 
 function app() {
-
   // ALL CONSTS ///
   //Backend
   const backendURL = "http://localhost:5000"
   const mobileWidth = 768;
 
-
+  // Window url check
+  const current_window_url = window.location.href;
 
 
 
@@ -46,9 +44,6 @@ const [main_pop, set_main_pop] = React.useState()
 // Site main pop handle
 const [main_pop_show, set_main_pop_show] = React.useState(false)
 
-
-// User single post show
-const [user_single, set_user_single] = React.useState(undefined)
 
 // Window innerWidth
 const[currentWidth, setCurrentWidth] = React.useState(window.innerWidth)
@@ -66,7 +61,7 @@ const handle_reload = ()=> set_reload(!reload)
 
 
 // Current page name
-const [current_page, set_current_page] = React.useState('Home')
+const [current_page, set_current_page] = React.useState(current_window_url.split('/')[4])
 
 
 // Setting other page
@@ -88,14 +83,23 @@ const [top_alert_data, set_top_alert_data] = React.useState("")
 const [show_top_alert, set_show_top_alert] = React.useState(false)
 
 
-///END REACT STATES
+// Comment text state
+const [comment_text, set_comment_text] = React.useState('')
+
+
+// Live comment upload
+const[conut, set_count] = React.useState(0)
+
+
+
+///END REACT STATES////////////////////////////////////////
 
 
 
 
 
 
-// User All data fetch
+// User All data fetch/////////////////////////
   const [loading_user, setLoadingUser] = React.useState(false)
   const [userData, setUserData] = React.useState("")
   React.useEffect(()=> {
@@ -113,7 +117,7 @@ const [show_top_alert, set_show_top_alert] = React.useState(false)
       }
     }
     datafetch()
-  }, [reload])
+  }, [conut])
 
 
 
@@ -140,18 +144,14 @@ React.useEffect(()=> {
 
 
 
-
-
-
-
-///END data fetch////
+///END data fetch/////////////////////////
 
 
 
 
 
 
-///// ALL FUNCTIONS /////
+///// ALL FUNCTIONS //////////////////////////////
 // handles like dislike button on all single posts home and profile
 function handle_like_post(event, item) {
   event.preventDefault()
@@ -172,7 +172,7 @@ function handle_like_post(event, item) {
   .then(data=> {
   })
   .catch(error => console.error('Erorr', error));
-  set_reload(!reload)
+  handle_reload()
 }
 
 
@@ -190,13 +190,22 @@ var main_pop_handle = ()=> {
 
 
 // User profile pop up show 
-function handle_frind_profile_show(user) {
-  var profile = user.friend_profile? user.friend_profile : user.profile
+function handle_frind_profile_show(user, module_name) {
+  var profile = undefined
+  if (user.friend_profile) {
+    profile = user.friend_profile
+  } 
+  else if(user.profile) {
+      profile = user.profile
+  } 
+  else if (user)(
+      profile = user
+  )
+
 
   function handle_parameter() {
     handle_friend_profile(user)
   }
-  set_user_single(false)
 
   set_main_pop(
     <Pop_up_profile
@@ -207,6 +216,7 @@ function handle_frind_profile_show(user) {
       proile_btn_text   = "Remove Friend"
       proile_btn_url    = {`${backendURL}/remove-friend/${profile.userName}`}
       handle_friend_profile = {()=> handle_parameter}
+      module_name = {module_name}
     />
   )
   main_pop_handle()
@@ -214,54 +224,36 @@ function handle_frind_profile_show(user) {
 }
 
 
-
-
-//Showing user single post 
-function user_single_post(item) {
-  // Delete post pop
-  var popup_delete_btn = <>
-    <p class="title-1">Delete Post</p>
-    <a href={`${backendURL}/delete-post/${item.id}`}>
-      <button className="secondery-btn delete-btn mt-1">Confrim Delete!</button>
-    </a>
-  </>
-  set_main_pop(popup_delete_btn)
-
-    // already liked
-    var is_liked = item.liked_by_users.split(',').includes(userData.userName)
-    
-    // Calling the fucntin to pass event and Item
-    function post_liked() {
-      handle_like_post(event, item)
-      handle_reload()
+// error top massage
+function handle_err_top() {
+  if (!loading_user) {
+    var check = current_window_url.split('/')
+    if (check[4] == '_massage') {
+      set_top_alert_data(check[5].replace(/_/g, ' '))
+      set_show_top_alert(true)
     }
 
-  return (
-    <User_own_post 
-        key={nanoid()}
-        comment_url = {`${backendURL}/post-comment`}
-        post_data = {item}
-        post_image_url = {`${backendURL}/post/${item.user_name}/${item.id}/${item.file_name}`}
-        user_image_url = {`${backendURL}/profile/${item.user_name}/${item.user_image}`}
-        close_post={()=> close_post}
-        confrim_delete = {()=> main_pop_handle}
-        handle_like_btn = {()=> post_liked}
-        liked_style = {is_liked? 'liked-icon' : ""}
-        user_like = {""}
-      />
-  )
+  }
 }
 
 
+// Top up manage
+React.useEffect(()=> {
+  handle_err_top()
+}, [])
+
+React.useEffect(()=> {
+  const timer = setTimeout(()=> {
+        history.replaceState({ foo: "bar" }, null,  "http://localhost:5173/meme_sm/")
+        set_show_top_alert(false)
+  }, 7000)
+  return ()=> clearTimeout(timer)
+}, [show_top_alert])
 
 
 
 
 
-// Close post btn funtion
-function close_post(){
-  set_user_single(undefined)
-}
 
 
 
@@ -269,7 +261,6 @@ function close_post(){
 // Handle login or register
 function registery_func() {
   set_log_reg_pop(true)
-
   set_main_pop(
     <Register_module 
       handle_register = {()=> login_func}
@@ -280,23 +271,9 @@ function registery_func() {
 
 function login_func() {
   set_log_reg_pop(true)
-
-  function action_click() {
-    if (!loading_user) {
-      var check = current_window_url.split('/')
-      if (check[4] == 'error_text') {
-      }
-
-    }
-    
-  }
-
-
   set_main_pop(
     <Login_module 
       handle_register = {()=> registery_func}
-      handle_try = {()=> action_click}
-
     />)
 
 }
@@ -304,9 +281,8 @@ function login_func() {
 
 // Logout function
 function log_user_out() {
+  set_current_page('Home')
   window.location.href = `${backendURL}/logout`
-  const state = { page: 'Home', };
-  localStorage.setItem('state', JSON.stringify(state));
 }
 
 
@@ -320,21 +296,155 @@ const user_update_pop_handle = ()=> {
 }
 
 
-const current_window_url = window.location.href;
-
-React.useEffect(()=> {
-  const timer = setTimeout(()=> {
-      set_show_top_alert(false)
-  }, 2000)
-  return ()=> clearTimeout(timer)
-}, [show_top_alert])
 
 
 
-///END FUNCTIONS////
+  // show full comment
+  function handle_all_cumment(e) {
+    e.preventDefault()
+    var all_comment_box = e.target.previousElementSibling
+    if(all_comment_box.className != 'full_comments') {
+      all_comment_box.classList.add('full_comments')
+
+    } 
+    else {
+      all_comment_box.classList.remove('full_comments')
+    }
+
+  }
 
 
-console.log(top_alert_data, show_top_alert)
+
+
+
+
+  // posting commments
+  function post_all_comments(post_data) {
+    var post_all_comments = post_data.all_comments? post_data.all_comments : post_data
+
+    post_all_comments = post_all_comments.map( m => {
+      return (
+        <li>
+            <div className="comment_by">
+              <p className="user">@{m.cmt_by}__</p>
+            </div>
+            <div className="comment">
+             <p>{m.comment}</p>
+              <p className="comt-time">
+                {m.comment_time}
+              </p>
+            </div>
+        </li>
+      )
+    })
+    return post_all_comments
+  }
+
+
+
+
+
+var store_comment = ""
+
+// handle comment text input
+function comment_text_handle(event) {
+  event.preventDefault()
+  set_comment_text(event.target.value)
+  event.target.id = 'comment_field_id'
+  store_comment = event.target.value
+  handle_reload()
+}
+
+
+
+
+
+// Handle comment
+function comment_submit_btn(comment_by,post_id) {
+  set_count(prev => prev +1)
+    // add commnet to database 
+    fetch(`${backendURL}/comment/${comment_by}/${post_id}/${store_comment? store_comment : comment_text}`)
+    .then(res => res.json())
+    .then(data=> {
+
+    })
+    .catch(err=> console.log(err))
+
+    store_comment = ''
+    var element_input = document.getElementById('comment_field_id')
+    if(element_input) {
+      element_input.value = ''
+    }
+
+    set_comment_text("")
+    handle_reload()
+
+
+    // Live comments set
+    setTimeout(()=> {
+      set_count(prev => prev +1)
+    }, 700 )
+
+}
+
+
+
+
+
+// User all post
+function handle_current_user_all_post (data) {
+  var data_shorted = data.sort((a,b)=> b.id - a.id)
+
+  var user_all_post = data_shorted.map((n)=> {  
+  var post_data = n;
+  // already liked
+  var is_liked = post_data.liked_by_users.split(',').includes(userData.userName)
+  var all_post_comments = post_all_comments(n)
+  var comment_submit_btn_action = ()=> {
+    comment_submit_btn(userData.userName,post_data.id)
+  }
+  var post_liked = ()=>  {
+    handle_like_post(event, post_data)
+  }
+
+  // Delete post pop
+  var popup_delete_btn = <>
+    <p class="title-1">Delete Post</p>
+    <a href={`${backendURL}/delete-post/${post_data.id}`}>
+      <button className="secondery-btn delete-btn mt-1">Confrim Delete!</button>
+    </a>
+  </>
+  set_main_pop(popup_delete_btn)
+
+    return (
+      <User_post 
+        post_data = {post_data}
+        post_image_url = {`${backendURL}/post/${post_data.user_name}/${post_data.id}/${post_data.file_name}`}
+        user_image_url = {`${backendURL}/profile/${post_data.user_name}/${post_data.user_image}`}
+
+        handle_user_btn = {()=> {}} 
+        handle_like_btn = {()=> post_liked}
+        liked_style = {is_liked? 'liked-icon' : ""}
+        user_like = {""}
+        hide_comment_sac = {""}
+        handle_all_cumment = {()=> handle_all_cumment}
+        post_all_comments = {all_post_comments}
+        comment_text_handle = {()=>comment_text_handle}
+        comment_submit_btn = {()=>comment_submit_btn_action}
+        // own profile
+        confrim_delete = {()=> main_pop_handle}
+      />
+
+    )
+  })
+
+  set_all_posts_user(user_all_post)
+  handle_reload()
+  return user_all_post;
+}
+
+
+///END FUNCTIONS/////////////////////////////////////////
 
 
 
@@ -343,43 +453,77 @@ console.log(top_alert_data, show_top_alert)
 // Home post Setting up
 var home_posts = undefined
 if(loadingHome){
-  var home_data_shorted = homeData.sort((a,b)=> b.post.id-a.post.id)
-  home_posts = home_data_shorted.map(n=> {
+  // chekcing is it new user or user has friends or posts
+  var user_have_post_or_friends = ((userData.userAllPosts == false) && (userData.userAllFriends == false))
 
-    // profile show
-    function handle_profile() {
-      if (n.profile.userName == userData.userName) {
-        set_current_page('Profile')
-        handle_current_user_all_post(userData.userAllPosts)
-        set_reload(!reload)
-         // Scroll opton set
-        document.querySelector('body').scrollIntoView(true);
-      } 
-      else {
+  var home_data_shorted = (userData && !user_have_post_or_friends)? 
+              homeData.sort((a,b)=> b.post.id-a.post.id) 
+              :
+              homeData;
 
-        handle_frind_profile_show(n)
+  home_posts = !home_data_shorted? "" 
+  : home_data_shorted.map(n=> {
+    var handle_profile = ()=>{}
+    var post_liked = ()=> {}
+    var comment_submit_btn_action = ()=> {}
+    var is_liked = undefined
+    var post_data = undefined
+    var all_post_comments = undefined
+
+
+    if(userData && !user_have_post_or_friends) {
+      // profile show
+      handle_profile = ()=> {
+        if (n.profile.userName == userData.userName) {
+          set_current_page('Profile')
+          handle_current_user_all_post(userData.userAllPosts)
+          set_reload(!reload)
+          // Scroll opton set
+          document.querySelector('body').scrollIntoView(true);
+        } 
+        else {
+          handle_frind_profile_show(n)
+        }
       }
+
+      // already liked
+      is_liked = n.post.liked_by_users.split(',').includes(userData.userName)
+
+      // Calling the fucntin to pass event and Item
+      post_liked = ()=>  {
+        handle_like_post(event, n.post)
+      }
+
+      post_data = n.post
+      all_post_comments = post_all_comments(n.post)
+
+      // sending post commntes
+      comment_submit_btn_action = ()=> {
+        comment_submit_btn(userData.userName,n.post.id)
+      }
+
+    } 
+    else {
+      post_data = n
     }
 
-    // already liked
-    var is_liked = n.post.liked_by_users.split(',').includes(userData.userName)
-
-    // Calling the fucntin to pass event and Item
-    function post_liked() {
-      handle_like_post(event, n.post)
-    }
-    
     return (
       <User_post 
-        key={nanoid()}
-        comment_url = {`${backendURL}/post-comment`}
-        post_data = {n.post}
-        post_image_url = {`${backendURL}/post/${n.post.user_name}/${n.post.id}/${n.post.file_name}`}
-        user_image_url = {`${backendURL}/profile/${n.post.user_name}/${n.post.user_image}`}
+        post_data = {post_data}
+        post_image_url = {`${backendURL}/post/${post_data.user_name}/${post_data.id}/${post_data.file_name}`}
+        user_image_url = {`${backendURL}/profile/${post_data.user_name}/${post_data.user_image}`}
+
         handle_user_btn = {()=> handle_profile} 
         handle_like_btn = {()=> post_liked}
         liked_style = {is_liked? 'liked-icon' : ""}
         user_like = {""}
+        hide_comment_sac = {(userData && !user_have_post_or_friends)? '': "hide"}
+        handle_all_cumment = {()=> handle_all_cumment}
+        post_all_comments = {all_post_comments}
+        comment_text_handle = {()=>comment_text_handle}
+        comment_submit_btn = {comment_text? ()=> comment_submit_btn_action : ()=>{}}
+        
+        confrim_delete = {()=> {}}
       />
     )
   })
@@ -388,59 +532,15 @@ if(loadingHome){
 
 
 
+
+
+
 // User all friends posts show in profile
 var all_frieds_posts = undefined
-
-function handle_user_all_post(userData) {
-  all_frieds_posts = userData.user_friend_post.map(n=> {
-    var post_image = `${backendURL}/post/${n.user_name}/${n.id}/${n.file_name}`
-
-
-    // friend single post
-    function see_post() {
-      main_pop_handle()
-
-      set_main_pop(
-        <div className="friend-single-post">
-          {user_single_post(n)}
-        </div>
-      )
-      handle_reload()
-    }
-
-    return (
-      <li key={nanoid()}>
-        <img src={post_image} alt="" />
-        <a onClick={()=> see_post()}><button className="secondery-btn mt-1">see post</button></a>
-      </li>
-    )
-  })
-  
+function handle_user_all_post(data) {
+  all_frieds_posts = handle_current_user_all_post (data)
 }
 
-
-
-
-// User all post
-function handle_current_user_all_post (data) { 
-    var user_all_post = data.map(n=> {
-    var postImage = `${backendURL}/post/${n.user_name}/${n.id}/${n.file_name}`
-    
-    function see_post() {
-      set_user_single(user_single_post(n))
-    }
-
-    return (
-      <li key={nanoid()}>
-        <img src={postImage} alt="" />
-        <a onClick={()=> see_post()}><button className="secondery-btn mt-1">see post</button></a>
-      </li>
-    )
-  })
-
-  set_all_posts_user(user_all_post)
-  handle_reload()
-}
 
 
 
@@ -475,6 +575,7 @@ function handle_current_user_all_post (data) {
         user_image = {`${backendURL}/profile/${userData.userName}/${userData.userImageUrl}`}
         btn = ''
         handle_btn = {()=>{}}
+        handle_image = {()=> {}}
       />
     )
   }
@@ -499,6 +600,10 @@ function handle_current_user_all_post (data) {
           main_pop_handle()
         }
 
+        function see_user() {
+          handle_frind_profile_show(n, 'suggested_friends')
+        }
+
         return (
           <User_box 
             user_id = {n.userName}
@@ -506,6 +611,7 @@ function handle_current_user_all_post (data) {
             user_image = {`${backendURL}/profile/${n.userName}/${n.userImageUrl}`}
             btn="add"
             handle_btn = {()=> add_new_fiend }
+            handle_image = {()=> see_user}
           />
         )
       })
@@ -528,11 +634,12 @@ const handle_click = (event) => {
   // profile_funtion
   if (page == 'Profile') {
     handle_current_user_all_post(userData.userAllPosts)
-    set_user_single(false)
   }
 
 
   set_current_page(page)
+  history.pushState(null, '/', page);
+
   handle_reload()
   // Scroll opton set
   document.querySelector('body').scrollIntoView(true);
@@ -547,9 +654,7 @@ function handle_friend_profile (friend) {
   
   var friend_posts = userData.userAllFriends.filter(n => n.friend_profile.userName== profile.userName)
 
-  handle_user_all_post(friend_posts[0])
-
-
+  handle_user_all_post(friend_posts[0].user_friend_post)
 
 
   if (friend) {
@@ -580,7 +685,6 @@ if (loading_user) {
     // friends profile pop data
     function handle_parameter() {
       handle_frind_profile_show(n)
-      close_post()
     }
 
     return (
@@ -590,55 +694,11 @@ if (loading_user) {
         user_image = {`${backendURL}/profile/${n.friend_profile.userName}/${n.friend_profile.userImageUrl}`}
         btn="See"
         handle_btn = {()=> handle_parameter}
+        handle_image = {()=> {}}
       />
     )
   })
 }
-
-
-
-
-
-
-
-
-
-
-////SORING CURRENT PAGE ON BROWSER
-// Save state to local storage before unload
-window.addEventListener('beforeunload', () => {
-  const state = {page: current_page,};
-  localStorage.setItem('state', JSON.stringify(state));
-});
-
-
-// Retrieve state from local storage on load
-window.addEventListener('load', () => {
-  const savedState = localStorage.getItem('state');
-  if (savedState) {
-    const state = JSON.parse(savedState);
-    // Restore your state
-    set_current_page(state.page)
-    // setting menu bar active class
-    const all_menu = document.querySelectorAll('.left-sidebar-menu ul li a')
-    all_menu.forEach(n=> {
-        const item_clasess = []
-        n.classList.forEach(i=> item_clasess.push(i))
-
-        if (item_clasess.includes('active')) {
-            n.classList.remove('active')
-        }
-
-        const item_page = n.childNodes[0].childNodes[1].innerHTML
-        if (state.page == item_page) {
-            n.classList.add('active')
-        }
-    })
-
-  }
-});
-
-// END CURRENT PAGE
 
 
 
@@ -662,13 +722,22 @@ var right_side = undefined
 function setting_page_body () {
   // Profile page
   if(current_page == 'Profile') {
+
+    // setting user data
+    if(userData) {
+
+      React.useEffect(()=> {
+        handle_current_user_all_post(userData.userAllPosts)
+      },[conut])
+    }
+    
     page_body = 
         <>
           <Profile 
             newPost = {<New_post/>}
             userData = {userData}
             userImage = {backendURL+"/profile/"+userData.userName+"/"+userData.userImageUrl}
-            user_all_post = {user_single? user_single : all_posts_user}
+            user_all_post = {all_posts_user}
             show_pop_handle = {()=> user_update_pop_handle}
             log_user_out = {()=> log_user_out}
           />
@@ -717,46 +786,75 @@ setting_page_body()
 
 
 
+// setting refresh window current class
+  window.onload = ()=> {
+  
+    setTimeout(()=> {
+      const all_menu = document.querySelectorAll('.left-sidebar-menu ul li a')
+      all_menu.forEach(n=> {
+        n.classList.remove('active')
+        var active_page = n.childNodes[0].childNodes[1].innerHTML
+        if (active_page ==  current_page) {
+          n.classList.add('active')
+        }
+      })
+    }, 600)
+  
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ///PAGE MAIN RETURN//
   return (
     <>  
         {/* Top alert */}
-        {show_top_alert?
+        {show_top_alert &&
           <Top_alert
             data={top_alert_data}
           />
-          :
-
-          ""
         }
 
-          
+
 
         {/* Site popups */}
         <div className="pop-up">
-          {main_pop_show?
+          {main_pop_show &&
             <Pop_up 
               main_pop_handle = {()=> main_pop_handle}
               data = {main_pop}
               log_reg_pop = {log_reg_pop}
               additional_class = {" "}
             />
-            :
-            ""
           }
         </div>
 
+
+
+
       {/* Main Body */}
+      {userData?
+
       <div className="container-fluid m-0 px-0">
         <div className="row m-0">
           <div className="col-md-2 order-2 left-sidebar-col order-md-1 sidebar">
                 {left_side}
           </div>
           <div className="col-md-7 order-1 order-md-2 middle-sidebar sidebar p-0">
-            {currentWidth >= mobileWidth?
-              ""
-              : 
-              <Mobile_header />}
+            {!(currentWidth >= mobileWidth) && 
+              <Mobile_header
+              main_logo={main_logo}
+              />}
               
             {page_body}
           </div>
@@ -765,10 +863,14 @@ setting_page_body()
           </div>
         </div>
       </div>
+      :
+      // Homeoverlay
+      <Home_overlay
+              data={home_posts? home_posts: ""}
+      />
+    }
 
 
-
-      
     </>
   )
 }

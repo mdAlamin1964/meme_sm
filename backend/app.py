@@ -16,6 +16,33 @@ db = SQLAlchemy(app)
 HOST = "http://localhost:5000/"
 FRONTEND = "http://localhost:5173/meme_sm/"
 
+
+
+
+
+#formate time
+def forame_time_now():
+    time_formated =  datetime.now()
+    exact_time= time_formated.strftime("%H:%M(24h)")
+    exact_months= time_formated.strftime("%B")
+    return f"{exact_time}, {exact_months} {time_formated.year}"
+
+
+
+# formate commment
+def formate_comment(data):
+    return {
+        'cmt_by' : data.user_name,
+        'comment': data.comment,
+        'comment_time' : data.comment_time,
+    }
+
+
+
+
+
+
+
 #New User registration Table
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,8 +50,8 @@ class User(db.Model):
     userName = db.Column(db.String(50), unique=True, nullable=False)
     bDay = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    joinDate = db.Column(db.DateTime(), default=datetime.now().replace(microsecond=0))
-    user_image = db.Column(db.LargeBinary)
+    joinDate = db.Column(db.DateTime(), default= datetime.utcnow())
+    user_image = db.Column(db.LargeBinary )
     user_image_name = db.Column(db.String(1000))
     def __repr__(self):
         return f"{self.userName}"
@@ -38,7 +65,7 @@ class User_post(db.Model):
     file_name = db.Column(db.String(100))
     data = db.Column(db.LargeBinary)
     description = db.Column(db.String(500))
-    date = db.Column(db.DateTime(), default = datetime.now().replace(microsecond=0))
+    date = db.Column(db.DateTime(), default = datetime.utcnow())
     liked_by = db.Column(db.Integer, default=0) 
     liked_by_users = db.Column(db.String(5000), default="")
     
@@ -54,6 +81,7 @@ class Post_comments(db.Model):
     user_name = db.Column(db.String(50))
     user_post_id = db.Column(db.Integer)
     comment = db.Column(db.String(1000))
+    comment_time = db.Column(db.String(100), default = forame_time_now())
 
 
 
@@ -98,10 +126,17 @@ logged_user = {
 
 
 
-
-
+#post formate
 def post_formate(i):
     user_image = User.query.filter_by(userName=i.user_name).first()
+    all_comments = Post_comments.query.filter_by(user_post_id=i.id).all()
+    
+    sorted_all_comments = sorted(all_comments, key=lambda x: x.id, reverse=True)
+
+    all_comments_data = []
+    for j in sorted_all_comments:
+        all_comments_data.append(formate_comment(j))
+
     return {
         'id': i.id,
         'user_name': i.user_name,
@@ -111,9 +146,12 @@ def post_formate(i):
         'liked_by': i.liked_by,
         'liked_by_users': i.liked_by_users,
         'user_image': user_image.user_image_name,
+        'all_comments': all_comments_data,
         
     }
 
+
+# Profile formate
 def profile_formate(i):
     return {
         'userName': i.userName,
@@ -127,14 +165,24 @@ def profile_formate(i):
 
 
 
-
 #validate info
 def validate_info(info):
-    if len(info) > 0:
-        return info
-    else:
+    if len(info) <= 0 or info == ' ' or info.isspace():
         return False
+    else:
+        return info
 
+
+
+
+
+#sending error message
+def send_massage(message='Something went wrong'):
+    
+    if ' ' in message:
+        message =  message.replace(" ","_")
+    
+    return redirect(f'{FRONTEND}_massage/{message}')
 
 
 
@@ -165,7 +213,7 @@ def user_data():
             
             user_friends_user_name.append(i.user_friend)
 
-            friend_all_post = []
+            friend_all_post = [] 
             for j in friend_post:
                 friend_all_post.append(post_formate(j))
 
@@ -174,12 +222,6 @@ def user_data():
                 'user_friend_post':friend_all_post,
                 })
         
-
-
-
-
-
-
 
         # Suggested friend to show
         suggested_frien_count = 12
@@ -216,11 +258,10 @@ def user_data():
 def home_data():
     try:
         user_friends_list = User_friends.query.filter_by(user_name=logged_user['user']).all()
-
-
-        all_friends_post=[]
-
+        
+        print('alain')
         #adding friends post
+        all_friends_post=[]
         for i in user_friends_list:
             friend_posts = User_post.query.filter_by(user_name=i.user_friend).all()
             friend_profile = User.query.filter_by(userName=i.user_friend).first()
@@ -239,11 +280,20 @@ def home_data():
                     'post':post_formate(j),
                     'profile': profile_formate(user_profile),
                     })
-
+        
         if user_friends_list:
             return build_actual_response(jsonify(all_friends_post))
         else:
-            raise ValueError('Invalid user')
+            print('alain')
+            random_all_posts = []
+            random_posts = User_post.query.order_by(User_post.id).all()
+            post_count = 12 if 12 <= len(random_posts) else len(random_posts)
+            random_posts = random.sample(random_posts, post_count)
+            
+            for i in random_posts:
+                random_all_posts.append(post_formate(i))
+            
+            return build_actual_response(jsonify(random_all_posts))
     except Exception as e:
        return render_template('failure.html', cause=e)
 
@@ -283,22 +333,36 @@ def post_image(user,id, url):
 @app.route("/register", methods=["POST", "GET"])
 def register():
     try:
-        fullName = request.form.get("register-name")
-        userName = request.form.get("register-user")
+        fullName = validate_info(request.form.get("register-name"))
+        userName = validate_info(request.form.get("register-user"))
         bDay = request.form.get("register-bday")
-        password = request.form.get("register-pass-confirm")
+        password = validate_info(request.form.get("register-pass"))
+        password_confirm = validate_info(request.form.get("register-pass-confirm"))
         userImage = request.files['user-photo']
 
-        new_user = User(fullName=fullName, userName=userName, bDay=bDay, password=password, user_image_name=userImage.filename ,user_image=userImage.read())
+        check_user_name = User.query.filter_by(userName=userName).first()  
 
-        db.session.add(new_user)
-        db.session.commit()
+        if check_user_name:
+            return send_massage('user name taken plase try diffrent one')
+
+
+        if (fullName and userName) and (password == password_confirm):
+            new_user = User(fullName=fullName, userName=userName, bDay=bDay, password=password, user_image_name=userImage.filename ,user_image=userImage.read())
+            db.session.add(new_user)
+            db.session.commit() 
+            return send_massage('Account Created Please login')
+        else:
+            return send_massage('invalid input or confrim password do not match!')
+
+        
     except Exception as e:
-        return render_template("failure.html", cause=e)
-    return redirect(FRONTEND)
+        return f'{e}'
 
 
 
+
+
+supported_file = ["jpg","jpeg","png"]
 
 #uplad files to server
 @app.route("/upload", methods=["POST"])
@@ -307,14 +371,22 @@ def upload():
         user_name = logged_user['user']
         description = request.form.get('description')
         file = request.files["file"]
+        file_exten = file.filename.split('.')
+
+        #validatin post
+        if not file:
+            return send_massage('Please add image')
+
+        if file_exten[len(file_exten)-1] not in supported_file:
+            return send_massage('file not support!')
+        
         new_post = User_post(user_name=user_name, description=description,file_name = file.filename, data = file.read())
         db.session.add(new_post)
         db.session.commit()
 
+        return redirect(FRONTEND+"Profile")
     except Exception as e:
-        return render_template('failure.html', cause=e)
-    
-    return redirect(FRONTEND)
+        return send_massage()
 
 
 
@@ -326,11 +398,14 @@ def delete_post(id):
     try:
         post_del = User_post.query.filter_by(id=id, user_name=logged_user['user']).first()
         
+        #Delete commets as well
+        Post_comments.query.filter(Post_comments.user_post_id == id).delete()
+
         db.session.delete(post_del)
         db.session.commit()
-        return redirect(FRONTEND)
+        return redirect(FRONTEND+"Profile")
     except Exception as e:
-        return render_template('failure.html', cause=e)
+        return send_massage()
 
 
 
@@ -346,9 +421,9 @@ def add_friends(friend):
 
         db.session.add(add_new_friend)
         db.session.commit()
-        return redirect(FRONTEND)
+        return redirect(FRONTEND+"Profile")
     except Exception as e:
-        return render_template('failure.html', cause=e)
+        return send_massage()
 
 
 
@@ -361,9 +436,9 @@ def remove_friends(user):
         db.session.delete(remove_friend)
         db.session.commit()
 
-        return redirect(FRONTEND)
+        return redirect(FRONTEND+"Profile")
     except Exception as e:
-        return render_template('failure.html', cause=e)
+        return send_massage()
 
 
 
@@ -389,10 +464,10 @@ def update_userData():
             user.user_image_name = new_image.filename
 
         db.session.commit()
-        return redirect(FRONTEND)
+        return redirect(FRONTEND+"Profile")
 
     except Exception as e:
-        return render_template('failure.html', cause=e)
+        return send_massage(e)
 
 
 
@@ -409,9 +484,9 @@ def login():
             logged_user['user'] = session["userName"]
             return redirect(FRONTEND)
         else:
-            return render_template('failure.html', cause="incorrect password or user")
+            return send_massage('Incorrect Password!')
     except Exception as e:
-        return send_err("Loggin failed!")
+        return send_massage("Loggin failed! no Data matched")
 
 
 
@@ -444,10 +519,6 @@ def liked_post(id):
 
         #removing emply list item
         all_likes = list(filter(None, likes_split))
-        
-        print(all_likes)
-        
-        print(logged_user['user'] in all_likes)
         if str(logged_user['user']) in all_likes:
             post.liked_by -= 1
             all_likes.remove(logged_user['user'])
@@ -456,8 +527,6 @@ def liked_post(id):
             all_likes.append(logged_user['user'])
             
         post.liked_by_users = ",".join(all_likes)
-
-        print(len(all_likes), all_likes)
         db.session.commit()
         return build_actual_response(jsonify({
             'total_likes': len(all_likes),
@@ -465,7 +534,7 @@ def liked_post(id):
         }))
     
     except Exception as e:
-        return render_template('failure.html', cause=e)
+        return send_massage()
 
 
 
@@ -482,7 +551,7 @@ def like_remove_post():
         return "Yes"
     
     except Exception as e:
-        return render_template('failure.html', cause=e)
+        return send_massage()
 
 
 
@@ -491,19 +560,50 @@ def like_remove_post():
 
 
 #comment sactions
-@app.route('/post-comment', methods=['POST'])
-def post_comment():
-    return "yes"
+@app.route('/post-comment/<cmt_by>/<int:post_id>', methods=['POST', 'GET'])
+def post_comment(cmt_by, post_id):
+    try:
+        
+        if request.method == 'POST' :
+            comment = validate_info(request.form.get('user_comment'))
+            if comment:
+                new_cmt = Post_comments(user_name=cmt_by, user_post_id = post_id, comment = comment)
+                db.session.add(new_cmt)
+                db.session.commit()
+                return redirect(FRONTEND)
+            
+
+
+        post_all_comt = Post_comments.query.filter_by(user_post_id = post_id).all()
+        all_comnts = []
+        for i in post_all_comt:
+            all_comnts.append(formate_comment(i))
+
+        return build_actual_response(jsonify(all_comnts))
+        
+    except:
+        send_massage()
 
 
 
 
-#sending error message
-def send_err(message):
-    return redirect(f'{FRONTEND}error_text/{message}')
 
+#comment submit
+@app.route('/comment/<cmt_by>/<int:post_id>/<string:comment>')
+def commnet_user(cmt_by, post_id, comment):
+    try:
+        if validate_info(comment):
+            new_comment = Post_comments(user_name=cmt_by, user_post_id=post_id, comment = comment)
+            db.session.add(new_comment)
+            db.session.commit()
 
-
+            post_all_comnt = Post_comments.query.filter_by(user_post_id = post_id).all()
+            all_comments = []
+            for i in post_all_comnt:
+                all_comments.append(formate_comment(i))
+            return build_actual_response(jsonify(all_comments))
+    except:
+        return send_massage()
 
 
 

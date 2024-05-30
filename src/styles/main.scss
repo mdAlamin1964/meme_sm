@@ -9,6 +9,7 @@
 body {
     @include primary-backround;
     color: $primary-text-color;
+    @include scroll_bar_style;
 }
 
 

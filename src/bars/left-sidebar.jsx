@@ -36,7 +36,7 @@ export default function left_sidebar({menu_function, main_logo}) {
                                 </a>
                             </li>
                             <li>
-                                <a onClick={menu_function()} className="white-link-hover">
+                                <a onClick={menu_function()} className="white-link-hover" id="link_profile">
                                     <p className="icon-text"><span class="material-symbols-outlined me-1">account_circle</span><span className="left-menu-text">Profile</span></p>
                                 </a>
                             </li>

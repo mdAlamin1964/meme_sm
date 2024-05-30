@@ -148,13 +148,16 @@
             .comment-text {
                 width: 90%;
                 display: inline-block;
-                form {
+                .from-comment {
                     display: flex;
                     align-items: center;
                 }
                  input {
                     width: 100%;
-                    background: transparent;
+                    background: rgba(0, 0, 0, 0.2);
+                    padding: 5px 5px;
+                    border-radius: 5px;
+                    margin-right: 5px;
                     border: none;
                     color: $primary-text-color;
                     font-size: $default-user-font-size;
@@ -269,3 +272,19 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+///suggested_friends
+.suggested_friends {
+    .secondery-btn {
+        display: none;
+    }
+}

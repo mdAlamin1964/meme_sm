@@ -1,7 +1,7 @@
-export default function pop_up_profile({proile_image_url, profile_fullName, profile_bDay, profile_join_date, proile_btn_text, proile_btn_url, handle_friend_profile}){
+export default function pop_up_profile({proile_image_url, profile_fullName, profile_bDay, profile_join_date, proile_btn_text, proile_btn_url, handle_friend_profile, module_name}){
     return (
         <>
-            <div className="container-fluid p-0 friends-profile">
+            <div className={`container-fluid p-0 friends-profile ${module_name}`}>
                 <div className="row">
                 <div className="col-md-6 mb-4">
                     <div className="user-image">

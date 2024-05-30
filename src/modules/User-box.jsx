@@ -1,9 +1,9 @@
-export default function user_box({user_id, user_name, user_image, btn, handle_btn}) {
+export default function user_box({user_id, user_name, user_image, btn, handle_btn, handle_image}) {
     return (
         <>
-            <div className="user-box-module mb-3">
+            <div className={`user-box-module mb-3`} >
                 <div className="user-name-image">
-                    <div className="user-image">
+                    <div className="user-image" onClick={handle_image()}>
                         <img className='' src={user_image} alt="" />
                     </div>
                     <div className="user-info">

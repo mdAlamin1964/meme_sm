@@ -10,7 +10,7 @@ export default function user_info_update() {
                         <input name="update-name" className="input-dft" type="text" id="user-info-update-name" placeholder="New Full name"  />
 
                         <p className="mt-2">Change Birthday</p>
-                        <input name="update-bday" className="input-dft mt-1" type="date" placeholder="B.day" />
+                        <input accept=".jpg, .jpeg, .png" name="update-bday" className="input-dft mt-1" type="date" placeholder="B.day" />
 
                         <p className="mt-2">Change Profile Photo</p>
                         <input type="file" name="update-photo" id="" className="input-dft mt-1" placeholder="fd"/>

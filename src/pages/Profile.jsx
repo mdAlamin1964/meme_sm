@@ -29,7 +29,7 @@ export default function profile({newPost, userData,userImage, user_all_post, sho
                     {newPost}
 
                     <div className="user-all-post mt-4">
-                        <ul>
+                        <ul className="user_all_post_ul">
                             {user_all_post}
                         </ul>
                     </div>

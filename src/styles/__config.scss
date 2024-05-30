@@ -3,18 +3,21 @@ $color_alert: #CC3300;
 $primary-text-color: #fff;
 $secondary-text-color: rgb(0, 219, 197);
 $gray-text-color: gray;
+$color_off_white: rgb(239, 239, 239);
 $default-border-color: #371b44;
 $primary-font-size: 14px;
 $default-list-margin-bottom: 1.5em;
 $default-user-font-size: 12px;
-$input-background: #2e053f;
+$input-background: #20032c;
 $mobile-header-background: #b7226c;
 $mobile_content_max_width: 500px;
 $mobile_header_give_space: 70px;
 $title_font_size: 24px;
 $site_alert_color: rgb(255, 129, 129);
+$site_color2: rgb(91, 82, 97);
 $site_black: black;
 $site_black_overlay: #0000006f; 
+$small_font_size: 12px;
 
 @mixin primary-backround{
     background: rgb(6, 0, 6);
@@ -56,6 +59,43 @@ $site_black_overlay: #0000006f;
     // }
     border : 4px solid $default-border-color;
 }
+
+
+
+
+@mixin scroll_bar_style {
+    
+    // scroll bar style
+    /* Custom scrollbar styles for WebKit browsers */
+    &::-webkit-scrollbar {
+        width: 7px; /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $input-background; /* Color of the track */
+        border-radius: 10px; /* Optional: round corners */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $default-border-color; /* Color of the thumb */
+        border-radius: 10px; /* Roundness of the thumb */
+        border: 1px solid transparent; /* Padding around the thumb */
+        background-clip: content-box; /* Ensures the padding is inside the box */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: $site_color2 ; /* Darker color when hovering */
+    }
+
+    &::-webkit-scrollbar-corner {
+        background: #f1f1f16c; /* Background color of the bottom-right corner */
+    }
+}
+
+
+
+
+
 
 
 
@@ -163,6 +203,15 @@ $site_black_overlay: #0000006f;
 
 
 
+// Hide
+.hide {
+    display: none;
+}
+
+
+
+
+
 
 .pointer {
     cursor: pointer;
@@ -179,12 +228,34 @@ $site_black_overlay: #0000006f;
 }
 
 
+@mixin move-animation($duration, $distance) {
+    animation: move $duration infinite alternate;
+    
+    @keyframes move {
+      0% {
+        transform: translateY(-50px);
+      }
+      15% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY($distance);
+      }
+    }
+  }
+
+
+
 
 //Top-alert
 .top-alert {
     position: fixed;
     z-index: 999;
     width: 100%;
+    @include move-animation(7s, -100px );
     .top-alert-module {
         max-width: 85%;
         position: absolute;
@@ -217,7 +288,7 @@ $site_black_overlay: #0000006f;
     width: 100%;
     height: 100vh;
     background-color: $site_black_overlay;
-    & > div {
+    .pop-data-box {
         position: absolute;
         top: 50%; 
         left: 50%; 
@@ -225,14 +296,28 @@ $site_black_overlay: #0000006f;
         background: $site_black;
         border-radius: 10px;
         padding: 20px;
+        padding-bottom: 10px;
         color: white;
         width: 500px;
+        overflow: hidden;
         .new-post-title {
             p{
                 display: inline-block;
             }
             .icon-link {
                 float: right;
+            }
+        }
+    }
+
+    .main-me {
+        text-align: right;
+        margin-top: 10px;
+        a {
+            color: $gray-text-color;
+            font-size: $default-user-font-size;
+            &:hover {
+                color: $secondary-text-color;
             }
         }
     }
@@ -252,3 +337,72 @@ $site_black_overlay: #0000006f;
         }
     }
 }
+
+
+.all-comments {
+    ul {
+        max-height: 60px;
+        overflow: hidden;
+        transition: all,0.3s;
+        padding-right: 5px;
+        li {
+            display: flex;
+            align-items: baseline;
+            padding: 3px 0;
+            p {
+                font-size: $small_font_size;
+                color: $gray-text-color;
+                line-height: 1.2;
+            }
+            .comment_by {
+                max-width: 80px;
+                .user {
+                    color: $primary-text-color;
+                    font-weight: 300;
+                }
+            }
+            .comment {
+                border-bottom: 1px solid $default-border-color;
+                border-right: 1px solid $default-border-color;
+                margin-bottom: 5px;
+                padding-bottom: 5px;
+                padding: 0 5px;
+                margin-left: -1px;
+                
+                
+                .comt-time {
+                    margin-top: 5px;
+                    font-weight: 400;
+                    padding-right: 5px;
+                    padding-bottom: 5px;
+                    height: 100%;
+                    font-size: 10px;
+                    text-align: right;
+                    color: $site_color2;
+                }
+            }
+        }
+    }
+
+    .secondery-btn {
+        border: 1px solid $default-border-color;
+        background: transparent;
+        padding: 3px;
+        font-size: $small_font_size;
+        border-radius: 0 0 3px 3px;
+        color: $primary-text-color ;
+        font-weight: 200;
+        &:hover {
+            color: $color_off_white;
+            background: $default-border-color;
+        }
+    }
+
+    .full_comments {
+        max-height: 400px;
+        overflow: auto;
+        @include scroll_bar_style;
+    }
+}
+
+

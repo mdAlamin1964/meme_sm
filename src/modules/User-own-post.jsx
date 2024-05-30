@@ -1,4 +1,4 @@
-export default function user_own_post({comment_url,post_data, post_image_url, user_image_url, close_post, confrim_delete, handle_like_btn, user_like, liked_style}) {
+export default function user_own_post({post_data, post_image_url, user_image_url, close_post, confrim_delete, handle_like_btn, liked_style, comment_text_handle, comment_submit_btn, post_all_comments, handle_all_cumment}) {
     return (
         <>
             <div className="user-post user-own-post mb-4">
@@ -7,8 +7,6 @@ export default function user_own_post({comment_url,post_data, post_image_url, us
                         <img className="user-post-image" src={user_image_url} alt="" />
                         <p className="user-post-id" >{post_data.user_name}</p>
                         <p className="user-post-timeago icon-link">
-                            {/* <span class="material-symbols-outlined"></span>
-                            <span className="time-number">14</span> */}
                             <span className="time-format">{post_data.date.slice(0,16)}</span>
                         </p>
                     </div>
@@ -46,15 +44,21 @@ export default function user_own_post({comment_url,post_data, post_image_url, us
                             <p><span className="user-id"><b>{post_data.user_name}</b></span> <span className="post-details-text">{post_data.description}</span></p>
                         </div>
                     </div>
-                    <div className="post-comment">
+                    <div className={`post-comment`}>
                         <div className="comment-text">
-                            <form action={comment_url} encType="multipart/form-data" method="POST" >
-                                <input type="text" placeholder="Add a comment..." />
-                                <button className="default-btn" type="submit">Post</button>
-                            </form>
+                            <div className="from-comment">
+                                <input onChange={comment_text_handle()} autoComplete="off" required type="text" name="user_comment" placeholder="Add a comment..." />
+                                <button onClick={comment_submit_btn()} className="default-btn" type="submit">Post</button>
+                            </div>
                         </div>
                         <div className="comment-emoji">
                             <span class="material-symbols-outlined">add_reaction</span>
+                        </div>
+                        <div className="all-comments mt-3">
+                            <ul id="all-comments-ul">
+                                {post_all_comments}
+                            </ul>
+                            <button onClick={handle_all_cumment()} className="secondery-btn mt-1">All comments</button>
                         </div>
                     </div>
                 </div>

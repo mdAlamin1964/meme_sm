@@ -94,17 +94,9 @@ $mobile-max-width: 768px;
         max-width: $mobile_content_max_width;
         margin: auto;
         margin-top: $mobile_header_give_space;
-        .user-all-post {
-            ul li {
-                width: 80%;
-                margin: auto;
-                display: block;
-                margin-bottom: 40px;
-                img{
-                    height: auto;
-                }
-            }
-
+        .user_all_post_ul {
+            max-width: 80%;
+            margin: auto;
         }
     }
 
@@ -112,7 +104,7 @@ $mobile-max-width: 768px;
 
 
     // Pop up style
-    .pop-in-middle-screen > div{
+    .pop-in-middle-screen .pop-data-box{
         width: 95%;
     }
 
@@ -126,6 +118,22 @@ $mobile-max-width: 768px;
             }
         }
     }
+
+
+    // home overlay
+    .home-overlay { 
+        left: -150px;
+    }
+
+
+
+    //  icons
+    .icon-link {
+        .material-symbols-outlined {
+            font-size: 1.5em;
+        }
+    }
+
 
 
 

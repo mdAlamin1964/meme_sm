@@ -21,7 +21,7 @@ export default function public_profile({userData,userImage, user_all_post}) {
                     </div>
 
                     <div className="user-all-post mt-4">
-                        <ul>
+                        <ul className="user_all_post_ul">
                             {user_all_post}
                         </ul>
                     </div>
