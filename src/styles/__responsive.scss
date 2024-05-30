@@ -1,9 +1,86 @@
 $mobile-max-width: 768px;
 
 @media only screen and (max-width: $mobile-max-width) {
+
     // Right side bar
     .right-sidebar-col {
-        display: none;
+        border: none;
+        position: fixed;
+        height: 40px;
+        bottom: 29px;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 5px !important;
+
+        .right-sidebar-user {
+            display: none;
+        }
+        .right-sidebar-suggested-text{
+            display: none;
+            p,a {
+                font-size: $small_font_size !important;
+            }
+        }
+
+        .friends-line {
+            overflow-x: auto;
+            white-space: nowrap;
+            @include scroll_bar_style;
+            
+            ul {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                justify-content: space-around;
+               li {
+                width: 40px;
+                display: inline-block;
+
+                .user-box-module {
+                    width: 55px;
+                }
+               } 
+            }
+            .user-name-image {
+                 display: block; 
+                 text-align: center; 
+
+                 .user-info {
+                   display: none;
+                 }
+
+                 .user-image {
+                    text-align: left;
+                    img {
+                        width: 30px;
+                        height: 30px;
+                    }
+                 }
+            }
+
+            .user-switch-link, .user-name {
+                display: none;
+            }
+
+
+
+
+            .suggested-all-friends {
+                .user-switch-link {
+                    margin-top: -25px;
+                    margin-left: 10px;
+                    display: block;
+                    padding: 0;
+                    a {
+                        font-size: $small_font_size;
+                    }
+                }
+            }
+
+
+
+        }
+
+
     }
 
 
@@ -17,8 +94,6 @@ $mobile-max-width: 768px;
     .middle-sidebar {
         margin-left: 0 !important;
     }
-
-
 
 
 
@@ -88,7 +163,6 @@ $mobile-max-width: 768px;
 
 
 
-
     // Page - profile
     .user-profile {
         max-width: $mobile_content_max_width;
@@ -102,10 +176,16 @@ $mobile-max-width: 768px;
 
 
 
-
     // Pop up style
     .pop-in-middle-screen .pop-data-box{
-        width: 95%;
+        width: 85%;
+        max-width: 350px; 
+
+        img {
+            height: 200px;
+            object-fit: cover;
+        }
+
     }
 
 
@@ -120,6 +200,7 @@ $mobile-max-width: 768px;
     }
 
 
+
     // home overlay
     .home-overlay { 
         left: -150px;
@@ -131,6 +212,20 @@ $mobile-max-width: 768px;
     .icon-link {
         .material-symbols-outlined {
             font-size: 1.5em;
+        }
+    }
+
+
+
+
+
+    // Middle bar
+    .middle-sidebar {
+
+        .main-header{
+            overflow-x: auto;
+            white-space: nowrap;
+            @include scroll_bar_style;
         }
     }
 

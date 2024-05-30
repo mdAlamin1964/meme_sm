@@ -69,6 +69,7 @@ $small_font_size: 12px;
     /* Custom scrollbar styles for WebKit browsers */
     &::-webkit-scrollbar {
         width: 7px; /* Width of the scrollbar */
+        height: 8px;
     }
 
     &::-webkit-scrollbar-track {
@@ -296,11 +297,15 @@ $small_font_size: 12px;
         background: $site_black;
         border-radius: 10px;
         padding: 20px;
+        padding-top: 40px;
         padding-bottom: 10px;
         color: white;
-        width: 500px;
+        width: 500px; 
         overflow: hidden;
         .new-post-title {
+            position: absolute;
+            top:10px;
+            right: 0;
             p{
                 display: inline-block;
             }
@@ -406,3 +411,21 @@ $small_font_size: 12px;
 }
 
 
+
+
+// search-module
+.search-module {
+    display: flex;
+    column-gap: 5px;
+    .secondery-btn {
+        background-color: $default-border-color;
+        color: white;
+        max-width: 80px;
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+    input {
+        @include input-style-0;
+    }
+}

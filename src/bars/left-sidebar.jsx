@@ -17,10 +17,10 @@ export default function left_sidebar({menu_function, main_logo}) {
                             </li>
                             <li>
                                 <a className="white-link-hover" onClick={menu_function()}>
-                                    <p className="icon-text"><span class="material-symbols-outlined me-1">image_search</span><span className="left-menu-text active">Search</span></p>
+                                    <p className="icon-text"><span class="material-symbols-outlined me-1">search</span><span className="left-menu-text active">Search</span></p>
                                 </a>
                             </li>
-                            <li>
+                            {/* <li>
                                 <a onClick={menu_function()} className="white-link-hover">
                                     <p className="icon-text"><span class="material-symbols-outlined me-1">slideshow</span><span className="left-menu-text">Reels</span></p>
                                 </a>
@@ -34,7 +34,7 @@ export default function left_sidebar({menu_function, main_logo}) {
                                 <a onClick={menu_function()} className="white-link-hover">
                                     <p className="icon-text"><span class="material-symbols-outlined me-1">notifications</span><span className="left-menu-text">Notifications</span></p>
                                 </a>
-                            </li>
+                            </li> */}
                             <li>
                                 <a onClick={menu_function()} className="white-link-hover" id="link_profile">
                                     <p className="icon-text"><span class="material-symbols-outlined me-1">account_circle</span><span className="left-menu-text">Profile</span></p>
@@ -44,7 +44,7 @@ export default function left_sidebar({menu_function, main_logo}) {
                         </ul>
                     </div>
 
-                    <div className="left-sidebar-bottom">
+                    {/* <div className="left-sidebar-bottom">
                         <ul>
                             <li>
                                 <a onClick={menu_function()} className="white-link-hover">
@@ -52,7 +52,7 @@ export default function left_sidebar({menu_function, main_logo}) {
                                 </a>
                             </li>
                         </ul>
-                    </div>
+                    </div> */}
 
                 </div>
             </div>

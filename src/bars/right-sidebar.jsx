@@ -8,7 +8,7 @@ export default function right_sidebar({current_user, suggested_friends, heading}
                 </div>
 
                 <div className="right-sidebar-suggested ">
-                    <div className="right-sidebar-suggested-text mb-2">
+                    <div className="right-sidebar-suggested-text mb-md-2">
                         <div className="suggested-text">
                             <p>{heading}</p>
                         </div>
@@ -17,7 +17,12 @@ export default function right_sidebar({current_user, suggested_friends, heading}
                         </div>
                     </div>
                     {/* Suggesten friends */}
-                    {suggested_friends}
+                    <div className="friends-line">
+                        <ul> 
+                            {suggested_friends}
+                        </ul>
+                    </div>
+                    
                 </div>
             </div>
         </>

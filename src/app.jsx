@@ -14,6 +14,7 @@ import Pop_up_profile from './modules/pop-up-profile';
 import Public_profile from './pages/Public-profile';
 import Right_sidebar from './bars/right-sidebar';
 import Register_module from './modules/Register';
+import Search_main from './modules/Search';
 import Top_alert from './modules/Top_alert';
 import User_head from './modules/User-head';
 import User_box from './modules/User-box';
@@ -28,6 +29,7 @@ import './styles/main.css'
 
 function app() {
   // ALL CONSTS ///
+
   //Backend
   const backendURL = "http://localhost:5000"
   const mobileWidth = 768;
@@ -44,10 +46,8 @@ const [main_pop, set_main_pop] = React.useState()
 // Site main pop handle
 const [main_pop_show, set_main_pop_show] = React.useState(false)
 
-
 // Window innerWidth
 const[currentWidth, setCurrentWidth] = React.useState(window.innerWidth)
-  
 React.useEffect(()=> {
   window.addEventListener('resize', ()=> {
     setCurrentWidth(window.innerWidth)
@@ -63,36 +63,30 @@ const handle_reload = ()=> set_reload(!reload)
 // Current page name
 const [current_page, set_current_page] = React.useState(current_window_url.split('/')[4])
 
-
 // Setting other page
 const [other_page, set_other_page] = React.useState()
-
 
 // Log Reg_pop up
 const [log_reg_pop, set_log_reg_pop] = React.useState(false)
 
-
-
 // Setting user all post
 const [all_posts_user, set_all_posts_user] = React.useState(undefined)
-
-
 
 // Top alert
 const [top_alert_data, set_top_alert_data] = React.useState("")
 const [show_top_alert, set_show_top_alert] = React.useState(false)
 
-
 // Comment text state
 const [comment_text, set_comment_text] = React.useState('')
-
 
 // Live comment upload
 const[conut, set_count] = React.useState(0)
 
-
-
 ///END REACT STATES////////////////////////////////////////
+
+
+
+
 
 
 
@@ -121,9 +115,6 @@ const[conut, set_count] = React.useState(0)
 
 
 
-
-
-
 // Home page data fetch
 const [loadingHome, setLoadingHome] = React.useState(false)
 const [homeData, setHomeData] = React.useState('')
@@ -141,8 +132,6 @@ React.useEffect(()=> {
   }
   datafetch()
 },[reload])
-
-
 
 ///END data fetch/////////////////////////
 
@@ -179,12 +168,10 @@ function handle_like_post(event, item) {
 
 
 
-
 // Setting main popup handle show or hide
 var main_pop_handle = ()=> {
   set_main_pop_show(!main_pop_show)
 }
-
 
 
 
@@ -251,13 +238,6 @@ React.useEffect(()=> {
 }, [show_top_alert])
 
 
-
-
-
-
-
-
-
 // Handle login or register
 function registery_func() {
   set_log_reg_pop(true)
@@ -267,8 +247,7 @@ function registery_func() {
     />)
 }
 
-
-
+// Login funtion
 function login_func() {
   set_log_reg_pop(true)
   set_main_pop(
@@ -287,7 +266,6 @@ function log_user_out() {
 
 
 
-
 //User info update handle
 const user_update_pop_handle = ()=> {
   set_main_pop(
@@ -295,57 +273,52 @@ const user_update_pop_handle = ()=> {
   main_pop_handle()
 }
 
+// show full comment
+function handle_all_cumment(e) {
+  e.preventDefault()
+  var all_comment_box = e.target.previousElementSibling
+  if(all_comment_box.className != 'full_comments') {
+    all_comment_box.classList.add('full_comments')
 
-
-
-
-  // show full comment
-  function handle_all_cumment(e) {
-    e.preventDefault()
-    var all_comment_box = e.target.previousElementSibling
-    if(all_comment_box.className != 'full_comments') {
-      all_comment_box.classList.add('full_comments')
-
-    } 
-    else {
-      all_comment_box.classList.remove('full_comments')
-    }
-
+  } 
+  else {
+    all_comment_box.classList.remove('full_comments')
   }
 
+}
 
 
 
 
 
-  // posting commments
-  function post_all_comments(post_data) {
-    var post_all_comments = post_data.all_comments? post_data.all_comments : post_data
 
-    post_all_comments = post_all_comments.map( m => {
-      return (
-        <li>
-            <div className="comment_by">
-              <p className="user">@{m.cmt_by}__</p>
-            </div>
-            <div className="comment">
-             <p>{m.comment}</p>
-              <p className="comt-time">
-                {m.comment_time}
-              </p>
-            </div>
-        </li>
-      )
-    })
-    return post_all_comments
-  }
+// posting commments
+function post_all_comments(post_data) {
+  var post_all_comments = post_data.all_comments? post_data.all_comments : post_data
+
+  post_all_comments = post_all_comments.map( m => {
+    return (
+      <li>
+          <div className="comment_by">
+            <p className="user">@{m.cmt_by}__</p>
+          </div>
+          <div className="comment">
+            <p>{m.comment}</p>
+            <p className="comt-time">
+              {m.comment_time}
+            </p>
+          </div>
+      </li>
+    )
+  })
+  return post_all_comments
+}
 
 
 
 
 
 var store_comment = ""
-
 // handle comment text input
 function comment_text_handle(event) {
   event.preventDefault()
@@ -354,7 +327,6 @@ function comment_text_handle(event) {
   store_comment = event.target.value
   handle_reload()
 }
-
 
 
 
@@ -378,7 +350,6 @@ function comment_submit_btn(comment_by,post_id) {
 
     set_comment_text("")
     handle_reload()
-
 
     // Live comments set
     setTimeout(()=> {
@@ -445,6 +416,32 @@ function handle_current_user_all_post (data) {
 
 
 ///END FUNCTIONS/////////////////////////////////////////
+
+
+
+
+
+// Header user friends
+var header_heads =undefined
+if (loading_user) {
+  header_heads = userData.userAllFriends.slice(0,5).map(n => {
+    function see_user() {
+      handle_frind_profile_show(n)
+    }
+
+    return (
+      <li key={nanoid()}> 
+        <User_head 
+          user_name = {n.friend_profile.fullName.slice(0, 15)}
+          user_image = {`${backendURL}/profile/${n.friend_profile.userName}/${n.friend_profile.userImageUrl}`}
+          handle_image = {()=> see_user}
+        />   
+      </li>
+    )
+  })
+}
+
+
 
 
 
@@ -533,8 +530,6 @@ if(loadingHome){
 
 
 
-
-
 // User all friends posts show in profile
 var all_frieds_posts = undefined
 function handle_user_all_post(data) {
@@ -544,84 +539,66 @@ function handle_user_all_post(data) {
 
 
 
-// Header user friends
-  var header_heads =undefined
-  if (loading_user) {
-    header_heads = userData.userAllFriends.slice(0,5).map(n => {
-      return (
-        <li key={nanoid()}> 
-          <User_head 
-            user_name = {n.friend_profile.fullName}
-            user_image = {`${backendURL}/profile/${n.friend_profile.userName}/${n.friend_profile.userImageUrl}`}
-          />   
-        </li>
-      )
-    })
-  }
-
-
-
-
-
-
   
 // Current user info
-  var current_user = undefined
-  if (loading_user) {
-    current_user = (
-      <User_box 
-        user_id = {userData.userName}
-        user_name = {userData.fullName}
-        user_image = {`${backendURL}/profile/${userData.userName}/${userData.userImageUrl}`}
-        btn = ''
-        handle_btn = {()=>{}}
-        handle_image = {()=> {}}
-      />
-    )
-  }
+var current_user = undefined
+if (loading_user) {
+  current_user = (
+    <User_box 
+      user_id = {userData.userName}
+      user_name = {userData.fullName}
+      user_image = {`${backendURL}/profile/${userData.userName}/${userData.userImageUrl}`}
+      btn = ''
+      handle_btn = {()=>{}}
+      handle_image = {()=> {}}
+    />
+  )
+}
 
 
 
 
 
 // Suggested friends
-    var suggested_friends = undefined
-    if(loading_user) {
-      suggested_friends = userData.suggested_friends.map(n=> {
-        const data = <>
-                      <p class="title-1">Add {n.fullName}</p>
-                      <a href={`${backendURL}/add-friend/${n.userName}`}>
-                        <button className="secondery-btn mt-1">Confrim add!</button>
-                      </a>
-                    </>
+var suggested_friends = undefined
+if(loading_user) {
+  suggested_friends = userData.suggested_friends.map(n=> {
+    const data = <>
+                  <p class="title-1">Add {n.fullName}</p>
+                  <a href={`${backendURL}/add-friend/${n.userName}`}>
+                    <button className="secondery-btn mt-1">Confrim add!</button>
+                  </a>
+                </>
 
-        function add_new_fiend() {
-          set_main_pop(data)
-          main_pop_handle()
-        }
-
-        function see_user() {
-          handle_frind_profile_show(n, 'suggested_friends')
-        }
-
-        return (
-          <User_box 
-            user_id = {n.userName}
-            user_name = {n.fullName}
-            user_image = {`${backendURL}/profile/${n.userName}/${n.userImageUrl}`}
-            btn="add"
-            handle_btn = {()=> add_new_fiend }
-            handle_image = {()=> see_user}
-          />
-        )
-      })
+    function add_new_fiend() {
+      set_main_pop(data)
+      main_pop_handle()
     }
 
+    function see_user() {
+      handle_frind_profile_show(n, 'suggested_friends')
+    }
+
+    return (
+      <li className='suggested-all-friends'>
+        <User_box 
+          user_id = {n.userName}
+          user_name = {n.fullName}
+          user_image = {`${backendURL}/profile/${n.userName}/${n.userImageUrl}`}
+          btn="add"
+          handle_btn = {()=> add_new_fiend }
+          handle_image = {()=> see_user}
+        />
+      </li>
+    )
+  })
+}
 
 
 
 
-// Menu btn
+
+// Menu btn//////
 const handle_click = (event) => {
   event.preventDefault();
   const element = event.target;
@@ -636,9 +613,17 @@ const handle_click = (event) => {
     handle_current_user_all_post(userData.userAllPosts)
   }
 
+  if (page == 'Search') {
+    set_main_pop(
+      <Search_main 
 
-  set_current_page(page)
-  history.pushState(null, '/', page);
+      />
+    )
+    main_pop_handle()
+  } else {
+    set_current_page(page)
+    history.pushState(null, '/', page);
+  }
 
   handle_reload()
   // Scroll opton set
@@ -655,7 +640,6 @@ function handle_friend_profile (friend) {
   var friend_posts = userData.userAllFriends.filter(n => n.friend_profile.userName== profile.userName)
 
   handle_user_all_post(friend_posts[0].user_friend_post)
-
 
   if (friend) {
     var page_body = 
@@ -688,22 +672,19 @@ if (loading_user) {
     }
 
     return (
-      <User_box 
-        user_id = {n.friend_profile.userName}
-        user_name = {n.friend_profile.fullName}
-        user_image = {`${backendURL}/profile/${n.friend_profile.userName}/${n.friend_profile.userImageUrl}`}
-        btn="See"
-        handle_btn = {()=> handle_parameter}
-        handle_image = {()=> {}}
-      />
+       <li className='user-all-friends'>
+        <User_box 
+          user_id = {n.friend_profile.userName}
+          user_name = {n.friend_profile.fullName.slice(0,12)}
+          user_image = {`${backendURL}/profile/${n.friend_profile.userName}/${n.friend_profile.userImageUrl}`}
+          btn="See"
+          handle_btn = {()=> handle_parameter}
+          handle_image = {()=> handle_parameter}
+        />
+      </li>
     )
   })
 }
-
-
-
-
-
 
 
 
@@ -715,10 +696,11 @@ var left_side =
 <Left_sidebar 
   menu_function = {()=> handle_click}
   main_logo = {main_logo}
+
 />
 
-var right_side = undefined
 
+var right_side = undefined
 function setting_page_body () {
   // Profile page
   if(current_page == 'Profile') {
@@ -785,22 +767,20 @@ setting_page_body()
 
 
 
-
 // setting refresh window current class
-  window.onload = ()=> {
-  
-    setTimeout(()=> {
-      const all_menu = document.querySelectorAll('.left-sidebar-menu ul li a')
-      all_menu.forEach(n=> {
-        n.classList.remove('active')
-        var active_page = n.childNodes[0].childNodes[1].innerHTML
-        if (active_page ==  current_page) {
-          n.classList.add('active')
-        }
-      })
-    }, 600)
-  
-  }
+window.onload = ()=> {
+  setTimeout(()=> {
+    const all_menu = document.querySelectorAll('.left-sidebar-menu ul li a')
+    all_menu.forEach(n=> {
+      n.classList.remove('active')
+      var active_page = n.childNodes[0].childNodes[1].innerHTML
+      if (active_page ==  current_page) {
+        n.classList.add('active')
+      }
+    })
+  }, 600)
+
+}
 
 
 
@@ -810,12 +790,7 @@ setting_page_body()
 
 
 
-
-
-
-
-
-///PAGE MAIN RETURN//
+///PAGE MAIN RETURN//////////////////////////////
   return (
     <>  
         {/* Top alert */}
@@ -854,6 +829,7 @@ setting_page_body()
             {!(currentWidth >= mobileWidth) && 
               <Mobile_header
               main_logo={main_logo}
+              main_search = {<Search_main/>}
               />}
               
             {page_body}
@@ -876,3 +852,5 @@ setting_page_body()
 }
 
 export default app
+
+///////END game /////////////////////

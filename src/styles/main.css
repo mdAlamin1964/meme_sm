@@ -166,10 +166,16 @@
   background: black;
   border-radius: 10px;
   padding: 20px;
+  padding-top: 40px;
   padding-bottom: 10px;
   color: white;
   width: 500px;
   overflow: hidden;
+}
+.pop-in-middle-screen .pop-data-box .new-post-title {
+  position: absolute;
+  top: 10px;
+  right: 0;
 }
 .pop-in-middle-screen .pop-data-box .new-post-title p {
   display: inline-block;
@@ -255,6 +261,7 @@
 }
 .all-comments .full_comments::-webkit-scrollbar {
   width: 7px; /* Width of the scrollbar */
+  height: 8px;
 }
 .all-comments .full_comments::-webkit-scrollbar-track {
   background: #20032c; /* Color of the track */
@@ -271,6 +278,41 @@
 }
 .all-comments .full_comments::-webkit-scrollbar-corner {
   background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
+}
+
+.search-module {
+  display: flex;
+  -moz-column-gap: 5px;
+       column-gap: 5px;
+}
+.search-module .secondery-btn {
+  background-color: #371b44;
+  color: white;
+  max-width: 80px;
+}
+.search-module .secondery-btn:hover {
+  opacity: 0.9;
+}
+.search-module input {
+  width: 100%;
+  background-color: #20032c;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  color: #fff;
+}
+.search-module input:focus {
+  outline: none;
+}
+.search-module input::-moz-placeholder {
+  font-weight: 300;
+  color: gray;
+  font-size: 16px;
+}
+.search-module input::placeholder {
+  font-weight: 300;
+  color: gray;
+  font-size: 16px;
 }
 
 * {
@@ -341,6 +383,8 @@ a {
 }
 .user-head-module .user-head-id {
   text-align: center;
+  font-size: 12px;
+  color: gray;
 }
 
 .user-post {
@@ -533,9 +577,112 @@ a {
     transform: translateY(0%);
   }
 }
+.right-sidebar-col {
+  position: fixed;
+  background: rgb(6, 0, 6);
+  background: linear-gradient(0deg, rgb(0, 0, 0) 6%, rgb(50, 22, 37) 34%, rgb(0, 0, 0) 80%);
+  background-attachment: fixed;
+  border-left: 1px solid #371b44;
+  right: 0;
+  height: 100vh;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.right-sidebar-col .login-register {
+  border-top: 1px solid #371b44;
+}
+
+.right-sidebar-suggested-text {
+  display: block;
+}
+.right-sidebar-suggested-text div {
+  display: inline-block;
+}
+.right-sidebar-suggested-text .suggested-see-all {
+  float: right;
+}
+
 @media only screen and (max-width: 768px) {
   .right-sidebar-col {
+    border: none;
+    position: fixed;
+    height: 40px;
+    bottom: 29px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 5px !important;
+  }
+  .right-sidebar-col .right-sidebar-user {
     display: none;
+  }
+  .right-sidebar-col .right-sidebar-suggested-text {
+    display: none;
+  }
+  .right-sidebar-col .right-sidebar-suggested-text p, .right-sidebar-col .right-sidebar-suggested-text a {
+    font-size: 12px !important;
+  }
+  .right-sidebar-col .friends-line {
+    overflow-x: auto;
+    white-space: nowrap;
+    /* Custom scrollbar styles for WebKit browsers */
+  }
+  .right-sidebar-col .friends-line::-webkit-scrollbar {
+    width: 7px; /* Width of the scrollbar */
+    height: 8px;
+  }
+  .right-sidebar-col .friends-line::-webkit-scrollbar-track {
+    background: #20032c; /* Color of the track */
+    border-radius: 10px; /* Optional: round corners */
+  }
+  .right-sidebar-col .friends-line::-webkit-scrollbar-thumb {
+    background-color: #371b44; /* Color of the thumb */
+    border-radius: 10px; /* Roundness of the thumb */
+    border: 1px solid transparent; /* Padding around the thumb */
+    background-clip: content-box; /* Ensures the padding is inside the box */
+  }
+  .right-sidebar-col .friends-line::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(91, 82, 97); /* Darker color when hovering */
+  }
+  .right-sidebar-col .friends-line::-webkit-scrollbar-corner {
+    background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
+  }
+  .right-sidebar-col .friends-line ul {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-around;
+  }
+  .right-sidebar-col .friends-line ul li {
+    width: 40px;
+    display: inline-block;
+  }
+  .right-sidebar-col .friends-line ul li .user-box-module {
+    width: 55px;
+  }
+  .right-sidebar-col .friends-line .user-name-image {
+    display: block;
+    text-align: center;
+  }
+  .right-sidebar-col .friends-line .user-name-image .user-info {
+    display: none;
+  }
+  .right-sidebar-col .friends-line .user-name-image .user-image {
+    text-align: left;
+  }
+  .right-sidebar-col .friends-line .user-name-image .user-image img {
+    width: 30px;
+    height: 30px;
+  }
+  .right-sidebar-col .friends-line .user-switch-link, .right-sidebar-col .friends-line .user-name {
+    display: none;
+  }
+  .right-sidebar-col .friends-line .suggested-all-friends .user-switch-link {
+    margin-top: -25px;
+    margin-left: 10px;
+    display: block;
+    padding: 0;
+  }
+  .right-sidebar-col .friends-line .suggested-all-friends .user-switch-link a {
+    font-size: 12px;
   }
   .middle-sidebar {
     margin-left: 0 !important;
@@ -591,7 +738,13 @@ a {
     margin: auto;
   }
   .pop-in-middle-screen .pop-data-box {
-    width: 95%;
+    width: 85%;
+    max-width: 350px;
+  }
+  .pop-in-middle-screen .pop-data-box img {
+    height: 200px;
+    -o-object-fit: cover;
+       object-fit: cover;
   }
   .friends-profile .user-image img {
     max-width: 300px;
@@ -601,6 +754,31 @@ a {
   }
   .icon-link .material-symbols-outlined {
     font-size: 1.5em;
+  }
+  .middle-sidebar .main-header {
+    overflow-x: auto;
+    white-space: nowrap;
+    /* Custom scrollbar styles for WebKit browsers */
+  }
+  .middle-sidebar .main-header::-webkit-scrollbar {
+    width: 7px; /* Width of the scrollbar */
+    height: 8px;
+  }
+  .middle-sidebar .main-header::-webkit-scrollbar-track {
+    background: #20032c; /* Color of the track */
+    border-radius: 10px; /* Optional: round corners */
+  }
+  .middle-sidebar .main-header::-webkit-scrollbar-thumb {
+    background-color: #371b44; /* Color of the thumb */
+    border-radius: 10px; /* Roundness of the thumb */
+    border: 1px solid transparent; /* Padding around the thumb */
+    background-clip: content-box; /* Ensures the padding is inside the box */
+  }
+  .middle-sidebar .main-header::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(91, 82, 97); /* Darker color when hovering */
+  }
+  .middle-sidebar .main-header::-webkit-scrollbar-corner {
+    background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
   }
 }
 body {
@@ -612,6 +790,7 @@ body {
 }
 body::-webkit-scrollbar {
   width: 7px; /* Width of the scrollbar */
+  height: 8px;
 }
 body::-webkit-scrollbar-track {
   background: #20032c; /* Color of the track */
@@ -674,31 +853,6 @@ body::-webkit-scrollbar-corner {
           user-select: none;
 }
 
-.right-sidebar-col {
-  position: fixed;
-  background: rgb(6, 0, 6);
-  background: linear-gradient(0deg, rgb(0, 0, 0) 6%, rgb(50, 22, 37) 34%, rgb(0, 0, 0) 80%);
-  background-attachment: fixed;
-  border-left: 1px solid #371b44;
-  right: 0;
-  height: 100vh;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.right-sidebar-col .login-register {
-  border-top: 1px solid #371b44;
-}
-
-.right-sidebar-suggested-text {
-  display: block;
-}
-.right-sidebar-suggested-text div {
-  display: inline-block;
-}
-.right-sidebar-suggested-text .suggested-see-all {
-  float: right;
-}
-
 .main-header ul {
   display: flex;
   align-items: center;
@@ -729,29 +883,4 @@ body::-webkit-scrollbar-corner {
 .mobile-header .logo img {
   width: 100%;
   max-width: 120px;
-}
-.mobile-header .search input {
-  width: 100%;
-  background-color: #20032c;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  color: #fff;
-}
-.mobile-header .search input:focus {
-  outline: none;
-}
-.mobile-header .search input::-moz-placeholder {
-  font-weight: 300;
-  color: gray;
-  font-size: 16px;
-}
-.mobile-header .search input::placeholder {
-  font-weight: 300;
-  color: gray;
-  font-size: 16px;
-}
-.mobile-header .material-symbols-outlined {
-  height: auto;
-  width: auto;
 }/*# sourceMappingURL=main.css.map */

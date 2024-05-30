@@ -86,3 +86,42 @@
         transform: translateY(0%)
     }
 }
+
+
+
+
+
+
+
+
+// Right-sidebar 
+.right-sidebar-col {
+    position: fixed;
+    @include primary-backround;
+    border-left: 1px solid $default-border-color;
+    right: 0;
+    height: 100vh;
+    padding-left: 0px;
+    padding-right: 0px;
+    .login-register {
+        border-top: 1px solid $default-border-color;
+    }
+
+
+}
+
+
+.right-sidebar-suggested-text {
+    display: block;
+    div {
+        display: inline-block;
+    }
+    .suggested-see-all {
+        float: right;
+    }
+}
+
+
+
+
+
