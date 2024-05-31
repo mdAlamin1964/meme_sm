@@ -82,6 +82,19 @@ const [comment_text, set_comment_text] = React.useState('')
 // Live comment upload
 const[conut, set_count] = React.useState(0)
 
+
+
+// Result show 
+
+const [get_result, set_get_result] = React.useState()
+
+const [show_result, set_show_result] = React.useState('')
+
+
+
+
+
+
 ///END REACT STATES////////////////////////////////////////
 
 
@@ -378,6 +391,8 @@ function handle_current_user_all_post (data) {
     handle_like_post(event, post_data)
   }
 
+
+
   // Delete post pop
   var popup_delete_btn = <>
     <p class="title-1">Delete Post</p>
@@ -413,6 +428,57 @@ function handle_current_user_all_post (data) {
   handle_reload()
   return user_all_post;
 }
+
+
+
+
+
+// Showing search data
+function show_serach_result(data) {
+  set_show_result(data)
+  set_current_page('Show_result')
+  set_show_result(
+    <div className="show_result_page">
+      {handle_current_user_all_post([data,])}
+    </div>
+  )
+
+  set_get_result("")
+  set_main_pop_show(false)
+  
+}
+
+
+
+// hanlde search
+function hanlde_search(e) {
+  const value = e.target.value
+  fetch(`${backendURL}/query/${value}`)
+  .then(res=> res.json())
+  .then(data=> {
+    const all_result = data.map(n=> {
+      return (
+          <li className='pointer' onClick={()=> show_serach_result(n)}>
+              <div className="image-des">
+                  <img src={`${backendURL}/post/${n.user_name}/${n.id}/${n.file_name}`} alt="" />
+                  
+                  <div className="detail">
+                    <h5>{n.user_name}</h5>
+                    <p className="des gray-out-text">
+                      {n.description.slice(0,20)}
+                    </p>
+                  </div>
+              </div>
+          </li>
+      )
+    })
+    set_get_result(all_result)
+  })
+  .catch(err=> console.log(err))
+  set_main_pop_show(true)
+}
+
+
 
 
 ///END FUNCTIONS/////////////////////////////////////////
@@ -474,7 +540,7 @@ if(loadingHome){
         if (n.profile.userName == userData.userName) {
           set_current_page('Profile')
           handle_current_user_all_post(userData.userAllPosts)
-          set_reload(!reload)
+          handle_reload()
           // Scroll opton set
           document.querySelector('body').scrollIntoView(true);
         } 
@@ -616,7 +682,7 @@ const handle_click = (event) => {
   if (page == 'Search') {
     set_main_pop(
       <Search_main 
-
+        hanlde_search = {()=> hanlde_search}
       />
     )
     main_pop_handle()
@@ -707,7 +773,6 @@ function setting_page_body () {
 
     // setting user data
     if(userData) {
-
       React.useEffect(()=> {
         handle_current_user_all_post(userData.userAllPosts)
       },[conut])
@@ -736,6 +801,12 @@ function setting_page_body () {
   else if (current_page == 'Notifications') {
     page_body = 'notifications'
   } 
+
+  // Show_result
+  else if( current_page == 'Show_result') {
+    page_body = show_result
+  }
+
 
  // default Home page
    else {
@@ -785,11 +856,6 @@ window.onload = ()=> {
 
 
 
-
-
-
-
-
 ///PAGE MAIN RETURN//////////////////////////////
   return (
     <>  
@@ -810,6 +876,8 @@ window.onload = ()=> {
               data = {main_pop}
               log_reg_pop = {log_reg_pop}
               additional_class = {" "}
+
+              search_result = {get_result}
             />
           }
         </div>
@@ -829,7 +897,11 @@ window.onload = ()=> {
             {!(currentWidth >= mobileWidth) && 
               <Mobile_header
               main_logo={main_logo}
-              main_search = {<Search_main/>}
+              main_search = {
+              <Search_main
+                hanlde_search = {()=> hanlde_search}
+              />
+            }
               />}
               
             {page_body}

@@ -608,6 +608,21 @@ def commnet_user(cmt_by, post_id, comment):
 
 
 
+#query data
+@app.route('/query/<query>')
+def query_data(query):
+    try:
+        matched_post = User_post.query.filter(User_post.description.like(f'%{query}%')).all()
+        all_match = []
+        for i in matched_post:
+            all_match.append(post_formate(i))
+        return build_actual_response(jsonify(all_match))
+    except:
+        return send_massage()
+
+
+
+
 
 
 

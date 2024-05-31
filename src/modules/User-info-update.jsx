@@ -3,7 +3,6 @@ export default function user_info_update() {
         <>  
                 <div className="user-info-update-module">
                     <div className="new-post-title my-2">
-                    <p className="title-1">Update your info</p>
                     </div>
                     <p className="user-name gray-out-text">Leave blank fields that you don not want to update.</p>
                     <form action="http://localhost:5000/update-userData" className="user-info-update-form mt-2" method="post" enctype="multipart/form-data">

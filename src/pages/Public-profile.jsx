@@ -1,7 +1,7 @@
 export default function public_profile({userData,userImage, user_all_post}) {
     return (
         <>
-            <div className="user-profile py-4">
+            <div className="user-profile py-4 public-profile">
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-4 mb-4">
