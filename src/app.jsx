@@ -32,6 +32,7 @@ function app() {
 
   //Backend
   const backendURL = "http://localhost:5000"
+  const FRONTEND = "http://localhost:5173/meme_sm/"
   const mobileWidth = 768;
 
   // Window url check
@@ -244,7 +245,7 @@ React.useEffect(()=> {
 
 React.useEffect(()=> {
   const timer = setTimeout(()=> {
-        history.replaceState({ foo: "bar" }, null,  "http://localhost:5173/meme_sm/")
+        history.replaceState({ foo: "bar" }, null,  FRONTEND)
         set_show_top_alert(false)
   }, 7000)
   return ()=> clearTimeout(timer)
@@ -361,6 +362,7 @@ function comment_submit_btn(comment_by,post_id) {
       element_input.value = ''
     }
 
+    element_input.id = ""
     set_comment_text("")
     handle_reload()
 

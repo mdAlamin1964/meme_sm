@@ -82,7 +82,7 @@
 
 .icon-link .material-symbols-outlined {
   font-size: 24px;
-  height: 40px;
+  height: 42px;
   width: 35px;
   cursor: pointer;
 }
@@ -353,11 +353,16 @@ a {
 .user-box-module .user-name-image .user-image img {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border: 2px solid #371b44;
+  border-radius: 0 30% 30%;
+  transition: 0.4s;
   margin-right: 0.4em;
-  border: 1px solid #371b44;
   -o-object-fit: cover;
      object-fit: cover;
+}
+.user-box-module .user-name-image .user-image img:hover {
+  border-radius: 30% 30% 0;
+  border-color: rgb(0, 180, 162);
 }
 .user-box-module .user-name-image .user-info .user-name {
   color: gray;
@@ -371,15 +376,17 @@ a {
 .user-head-module .user-head-image {
   width: 60px;
   height: 60px;
-  border-radius: 50%;
-  border: 4px solid #371b44;
+  border: 3px solid #371b44;
+  border-radius: 0 30% 30%;
+  transition: 0.4s;
   -o-object-fit: cover;
      object-fit: cover;
   -o-object-position: top;
      object-position: top;
 }
 .user-head-module .user-head-image:hover {
-  border-color: gray;
+  border-radius: 30% 30% 0;
+  border-color: rgb(0, 180, 162);
 }
 .user-head-module .user-head-id {
   text-align: center;
@@ -397,11 +404,17 @@ a {
 }
 .user-post .post-heading .image-name img {
   width: 40px;
-  border-radius: 50%;
+  border: 3px solid #371b44;
+  border-radius: 0 30% 30%;
+  transition: 0.4s;
   margin-right: 10px;
   -o-object-fit: cover;
      object-fit: cover;
   height: 40px;
+}
+.user-post .post-heading .image-name img:hover {
+  border-radius: 30% 30% 0;
+  border-color: rgb(0, 180, 162);
 }
 .user-post .post-heading .image-name .user-post-id {
   font-weight: 600;
@@ -543,15 +556,22 @@ a {
 }
 .serach-result .image-des {
   display: grid;
-  grid-template-columns: 100px auto;
+  grid-template-columns: 60px auto;
   -moz-column-gap: 10px;
        column-gap: 10px;
 }
 .serach-result .image-des img {
-  width: 100%;
-  height: 50px !important;
+  height: 60px !important;
+  width: 60px;
+  border: 2px solid #371b44;
+  border-radius: 0 20% 20%;
+  transition: 0.4s;
   -o-object-fit: cover;
      object-fit: cover;
+}
+.serach-result .image-des img:hover {
+  border-radius: 20% 20% 0;
+  border-color: rgb(0, 180, 162);
 }
 
 .show_result_page {
@@ -574,9 +594,16 @@ a {
   width: 140px;
   height: 140px;
   display: block;
-  border-radius: 50%;
   -o-object-fit: cover;
      object-fit: cover;
+  border: 2px solid #371b44;
+  border-radius: 0 20% 20%;
+  transition: 0.4s;
+  border-color: rgb(0, 180, 162);
+}
+.user-profile .user-image img:hover {
+  border-radius: 20% 20% 0;
+  border-color: rgb(0, 180, 162);
 }
 .user-profile .user-info h2 {
   margin: 0px;
@@ -587,6 +614,7 @@ a {
   margin-bottom: 1em;
   font-size: 12px;
 }
+
 .home-overlay {
   position: fixed;
   top: -200px;
@@ -654,6 +682,10 @@ a {
 }
 
 .public-profile .top-right {
+  display: none !important;
+}
+
+.main-home .top-right {
   display: none !important;
 }
 

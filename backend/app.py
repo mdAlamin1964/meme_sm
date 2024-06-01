@@ -117,8 +117,6 @@ def build_actual_response(response):
 
 
 
-
-
 logged_user = {
     'user' : ''
 }
@@ -347,7 +345,7 @@ def register():
 
 
         if (fullName and userName) and (password == password_confirm):
-            new_user = User(fullName=fullName, userName=userName, bDay=bDay, password=password, user_image_name=userImage.filename ,user_image=userImage.read())
+            new_user = User(fullName=fullName, userName=userName, bDay=bDay, password=password, user_image_name=userImage.filename ,user_image=userImage.read(), joinDate = datetime.utcnow())
             db.session.add(new_user)
             db.session.commit() 
             return send_massage('Account Created Please login')
@@ -380,7 +378,7 @@ def upload():
         if file_exten[len(file_exten)-1] not in supported_file:
             return send_massage('file not support!')
         
-        new_post = User_post(user_name=user_name, description=description,file_name = file.filename, data = file.read())
+        new_post = User_post(user_name=user_name, description=description,file_name = file.filename, data = file.read(), date=datetime.utcnow())
         db.session.add(new_post)
         db.session.commit()
 
@@ -558,42 +556,12 @@ def like_remove_post():
 
 
 
-
-#comment sactions
-@app.route('/post-comment/<cmt_by>/<int:post_id>', methods=['POST', 'GET'])
-def post_comment(cmt_by, post_id):
-    try:
-        
-        if request.method == 'POST' :
-            comment = validate_info(request.form.get('user_comment'))
-            if comment:
-                new_cmt = Post_comments(user_name=cmt_by, user_post_id = post_id, comment = comment)
-                db.session.add(new_cmt)
-                db.session.commit()
-                return redirect(FRONTEND)
-            
-
-
-        post_all_comt = Post_comments.query.filter_by(user_post_id = post_id).all()
-        all_comnts = []
-        for i in post_all_comt:
-            all_comnts.append(formate_comment(i))
-
-        return build_actual_response(jsonify(all_comnts))
-        
-    except:
-        send_massage()
-
-
-
-
-
 #comment submit
 @app.route('/comment/<cmt_by>/<int:post_id>/<string:comment>')
 def commnet_user(cmt_by, post_id, comment):
     try:
         if validate_info(comment):
-            new_comment = Post_comments(user_name=cmt_by, user_post_id=post_id, comment = comment)
+            new_comment = Post_comments(user_name=cmt_by, user_post_id=post_id, comment = comment, comment_time = forame_time_now())
             db.session.add(new_comment)
             db.session.commit()
 

@@ -8,9 +8,9 @@
             width: 140px;
             height: 140px;
             display: block;
-            border-radius: 50%;
             object-fit: cover;
-            
+            @include gradient-border(2px, 20%);
+            border-color: $secondary-text-color;
         }
         
     }
@@ -23,13 +23,6 @@
             color: $gray-text-color ;
             margin-bottom: 1em;
             font-size: $default-user-font-size;
-        }
-    }
-
-
-    .user-all-post {
-         .user_all_post_ul{
-            
         }
     }
 
@@ -131,6 +124,16 @@
 // public-profile
 .public-profile {
     .top-right{
+        display: none !important;
+    }
+}
+
+
+
+
+// main-home
+.main-home {
+    .top-right {
         display: none !important;
     }
 }
