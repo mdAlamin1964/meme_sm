@@ -12,9 +12,9 @@ export default function pop_up_profile({proile_image_url, profile_fullName, prof
                     <div className="user-info">
                         <h2>{profile_fullName}</h2>
                         <p className="user-name gray-out-text">Wish me on!</p>
-                        <h5>{profile_bDay}</h5>
+                        <h5>{profile_bDay.slice(0,16)}</h5>
                         <p className="user-name gray-out-text">join since:</p>
-                        <h6>{profile_join_date}</h6>
+                        <h6>{profile_join_date.slice(0,16)}</h6>
                     </div>
 
                     <a onClick={handle_friend_profile()}>

@@ -1,4 +1,4 @@
-export default function mobile_header({main_logo, main_search}) {
+export default function mobile_header({main_logo, main_search, backendURL}) {
     return (
         <>
             <div className="mobile-header py-2">
@@ -6,7 +6,9 @@ export default function mobile_header({main_logo, main_search}) {
                     <div className="row">
                         <div className="col-4">
                             <div className="logo">
-                                <img src={main_logo} alt="" />
+                                <a href={backendURL}>
+                                    <img src={main_logo} alt="" />
+                                </a>
                             </div>
                         </div>
                         <div className="col-8">

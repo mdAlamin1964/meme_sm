@@ -29,28 +29,28 @@
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
-  background: rgb(0, 180, 162);
+  background: linear-gradient(90deg, #00b4a2 10.18%, #dc77ff);
   width: 100%;
 }
 .secondery-btn:hover {
-  background-color: #fff;
+  background: #fff;
 }
 
 .delete-btn {
-  background-color: rgb(255, 129, 129);
+  background: rgb(255, 129, 129);
 }
 
 .user-logout-btn {
-  background-color: rgb(42, 42, 42);
+  background: rgb(42, 42, 42);
   color: white;
 }
 .user-logout-btn:hover {
-  background-color: rgb(255, 129, 129);
+  background: rgb(255, 129, 129);
 }
 
 .input-dft {
   width: 100%;
-  background-color: #20032c;
+  background: #20032c;
   border: none;
   padding: 8px 12px;
   border-radius: 5px;
@@ -156,7 +156,7 @@
   z-index: 99;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4352941176);
+  background: rgba(0, 0, 0, 0.4352941176);
 }
 .pop-in-middle-screen .pop-data-box {
   position: absolute;
@@ -268,13 +268,13 @@
   border-radius: 10px; /* Optional: round corners */
 }
 .all-comments .full_comments::-webkit-scrollbar-thumb {
-  background-color: #371b44; /* Color of the thumb */
+  background: #371b44; /* Color of the thumb */
   border-radius: 10px; /* Roundness of the thumb */
   border: 1px solid transparent; /* Padding around the thumb */
   background-clip: content-box; /* Ensures the padding is inside the box */
 }
 .all-comments .full_comments::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(91, 82, 97); /* Darker color when hovering */
+  background: rgb(91, 82, 97); /* Darker color when hovering */
 }
 .all-comments .full_comments::-webkit-scrollbar-corner {
   background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
@@ -286,7 +286,7 @@
        column-gap: 5px;
 }
 .search-module .secondery-btn {
-  background-color: #371b44;
+  background: #371b44;
   color: white;
   max-width: 80px;
 }
@@ -295,7 +295,7 @@
 }
 .search-module input {
   width: 100%;
-  background-color: #20032c;
+  background: #20032c;
   border: none;
   padding: 8px 12px;
   border-radius: 5px;
@@ -539,13 +539,13 @@ a {
   border-radius: 10px; /* Optional: round corners */
 }
 .serach-result::-webkit-scrollbar-thumb {
-  background-color: #371b44; /* Color of the thumb */
+  background: #371b44; /* Color of the thumb */
   border-radius: 10px; /* Roundness of the thumb */
   border: 1px solid transparent; /* Padding around the thumb */
   background-clip: content-box; /* Ensures the padding is inside the box */
 }
 .serach-result::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(91, 82, 97); /* Darker color when hovering */
+  background: rgb(91, 82, 97); /* Darker color when hovering */
 }
 .serach-result::-webkit-scrollbar-corner {
   background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
@@ -581,6 +581,9 @@ a {
 .show_result_page .post-details-text {
   font-size: 12px;
   color: gray;
+}
+.show_result_page .top-right {
+  display: none !important;
 }
 
 .user-profile {
@@ -721,13 +724,13 @@ a {
     border-radius: 10px; /* Optional: round corners */
   }
   .right-sidebar-col .friends-line::-webkit-scrollbar-thumb {
-    background-color: #371b44; /* Color of the thumb */
+    background: #371b44; /* Color of the thumb */
     border-radius: 10px; /* Roundness of the thumb */
     border: 1px solid transparent; /* Padding around the thumb */
     background-clip: content-box; /* Ensures the padding is inside the box */
   }
   .right-sidebar-col .friends-line::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(91, 82, 97); /* Darker color when hovering */
+    background: rgb(91, 82, 97); /* Darker color when hovering */
   }
   .right-sidebar-col .friends-line::-webkit-scrollbar-corner {
     background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
@@ -777,13 +780,13 @@ a {
   .left-sidebar-col {
     position: fixed;
     bottom: 40px;
-    background: #371b44;
+    background: linear-gradient(90deg, #260631 1.18%, #8500b3);
     bottom: -1px;
     height: 30px;
     padding: 0px !important;
     border-top: 1px solid #371b44;
     border-right: none;
-    background: #371b44 !important;
+    background: linear-gradient(90deg, #260631 1.18%, #8500b3) !important;
   }
   .left-sidebar-col .left-sidebar {
     padding-top: 0 !important;
@@ -856,13 +859,13 @@ a {
     border-radius: 10px; /* Optional: round corners */
   }
   .middle-sidebar .main-header::-webkit-scrollbar-thumb {
-    background-color: #371b44; /* Color of the thumb */
+    background: #371b44; /* Color of the thumb */
     border-radius: 10px; /* Roundness of the thumb */
     border: 1px solid transparent; /* Padding around the thumb */
     background-clip: content-box; /* Ensures the padding is inside the box */
   }
   .middle-sidebar .main-header::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(91, 82, 97); /* Darker color when hovering */
+    background: rgb(91, 82, 97); /* Darker color when hovering */
   }
   .middle-sidebar .main-header::-webkit-scrollbar-corner {
     background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
@@ -884,13 +887,13 @@ body::-webkit-scrollbar-track {
   border-radius: 10px; /* Optional: round corners */
 }
 body::-webkit-scrollbar-thumb {
-  background-color: #371b44; /* Color of the thumb */
+  background: #371b44; /* Color of the thumb */
   border-radius: 10px; /* Roundness of the thumb */
   border: 1px solid transparent; /* Padding around the thumb */
   background-clip: content-box; /* Ensures the padding is inside the box */
 }
 body::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(91, 82, 97); /* Darker color when hovering */
+  background: rgb(91, 82, 97); /* Darker color when hovering */
 }
 body::-webkit-scrollbar-corner {
   background: rgba(241, 241, 241, 0.4235294118); /* Background color of the bottom-right corner */
@@ -961,7 +964,7 @@ body::-webkit-scrollbar-corner {
   position: fixed;
   width: 100%;
   border-bottom: 1px solid #371b44;
-  background: #371b44;
+  background: linear-gradient(90deg, #260631 1.18%, #8500b3);
 }
 .mobile-header .row {
   display: flex;

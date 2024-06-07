@@ -30,9 +30,8 @@ import './styles/main.css'
 function app() {
   // ALL CONSTS ///
 
-  //Backend
-  const backendURL = "http://localhost:5000"
-  const FRONTEND = "http://localhost:5173/meme_sm/"
+  //Backend  live site 
+  const backendURL = "https://mdalmaincoder1.pythonanywhere.com"
   const mobileWidth = 768;
 
   // Window url check
@@ -62,7 +61,7 @@ const handle_reload = ()=> set_reload(!reload)
 
 
 // Current page name
-const [current_page, set_current_page] = React.useState(current_window_url.split('/')[4])
+const [current_page, set_current_page] = React.useState(current_window_url.split('/')[3])
 
 // Setting other page
 const [other_page, set_other_page] = React.useState()
@@ -92,12 +91,7 @@ const [get_result, set_get_result] = React.useState()
 const [show_result, set_show_result] = React.useState('')
 
 
-
-
-
-
 ///END REACT STATES////////////////////////////////////////
-
 
 
 
@@ -229,8 +223,8 @@ function handle_frind_profile_show(user, module_name) {
 function handle_err_top() {
   if (!loading_user) {
     var check = current_window_url.split('/')
-    if (check[4] == '_massage') {
-      set_top_alert_data(check[5].replace(/_/g, ' '))
+    if (check[3] == '_massage') {
+      set_top_alert_data(check[4].replace(/_/g, ' '))
       set_show_top_alert(true)
     }
 
@@ -245,7 +239,7 @@ React.useEffect(()=> {
 
 React.useEffect(()=> {
   const timer = setTimeout(()=> {
-        history.replaceState({ foo: "bar" }, null,  FRONTEND)
+        history.replaceState({ foo: "bar" }, null,  backendURL)
         set_show_top_alert(false)
   }, 7000)
   return ()=> clearTimeout(timer)
@@ -258,6 +252,8 @@ function registery_func() {
   set_main_pop(
     <Register_module 
       handle_register = {()=> login_func}
+      registerUrl = {`${backendURL}/register`}
+      file_check = {()=> check_file_size} 
     />)
 }
 
@@ -267,6 +263,7 @@ function login_func() {
   set_main_pop(
     <Login_module 
       handle_register = {()=> registery_func}
+      loginUrl = {`${backendURL}/login`}
     />)
 
 }
@@ -283,7 +280,10 @@ function log_user_out() {
 //User info update handle
 const user_update_pop_handle = ()=> {
   set_main_pop(
-  <User_info_update/>)
+  <User_info_update  
+    info_update_url={`${backendURL}/update-userData`}
+    file_check = {()=> check_file_size} 
+  />)
   main_pop_handle()
 }
 
@@ -380,11 +380,10 @@ function comment_submit_btn(comment_by,post_id) {
 // User all post
 function handle_current_user_all_post (data) {
   var data_shorted = data.sort((a,b)=> b.id - a.id)
-
   var user_all_post = data_shorted.map((n)=> {  
   var post_data = n;
   // already liked
-  var is_liked = post_data.liked_by_users.split(',').includes(userData.userName)
+  var is_liked = post_data.liked_by_users? post_data.liked_by_users.split(',').includes(userData.userName) : ""
   var all_post_comments = post_all_comments(n)
   var comment_submit_btn_action = ()=> {
     comment_submit_btn(userData.userName,post_data.id)
@@ -396,13 +395,17 @@ function handle_current_user_all_post (data) {
 
 
   // Delete post pop
-  var popup_delete_btn = <>
-    <p class="title-1">Delete Post</p>
-    <a href={`${backendURL}/delete-post/${post_data.id}`}>
-      <button className="secondery-btn delete-btn mt-1">Confrim Delete!</button>
-    </a>
-  </>
-  set_main_pop(popup_delete_btn)
+  function hanlde_delete() {
+      var popup_delete_btn = <>
+      <p class="title-1">Delete Post</p>
+      <a href={`${backendURL}/delete-post/${post_data.id}`}>
+        <button className="secondery-btn delete-btn mt-1">Confrim Delete!</button>
+      </a>
+    </>
+    set_main_pop(popup_delete_btn)
+    main_pop_handle()
+  }
+  
 
     return (
       <User_post 
@@ -420,7 +423,7 @@ function handle_current_user_all_post (data) {
         comment_text_handle = {()=>comment_text_handle}
         comment_submit_btn = {()=>comment_submit_btn_action}
         // own profile
-        confrim_delete = {()=> main_pop_handle}
+        confrim_delete = {()=> hanlde_delete}
       />
 
     )
@@ -483,6 +486,58 @@ function hanlde_search(e) {
 
 
 
+
+// check input file-size
+function check_file_size(e){
+  e.preventDefault()
+  var imagefile = e.target.files[0]
+
+  // image width quality
+  const WIDTH = 500
+  var reader = new FileReader
+  reader.readAsDataURL(imagefile)
+  reader.onload = (event) => {
+    var imageURL = event.target.result
+    var image = document.createElement("img")
+    image.src = imageURL
+    image.onload = (ev) => {
+      var canvas = document.createElement('canvas')
+      var ratio = WIDTH / ev.target.width
+      canvas.width = WIDTH
+      canvas.height = ev.target.height * ratio
+      const context = canvas.getContext("2d")
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+      
+      var new_image_url = context.canvas.toDataURL("image/jpeg", 70)
+      // change the input file to compressed one
+      fetch(new_image_url)
+      .then(res=> res.blob())
+      .then(blob => {
+        // change the input file to compressed one
+        const myfiledata =  [blob]
+        const myfileNamme = imagefile.name
+        const myfile = new File(myfiledata, myfileNamme)
+        const dataTrans = new DataTransfer()
+        dataTrans.items.add(myfile)
+        const fileList = dataTrans.files
+        e.target.files = fileList
+      })
+    }    
+  }
+
+
+
+
+
+
+
+ 
+  
+  
+}
+
+
+
 ///END FUNCTIONS/////////////////////////////////////////
 
 
@@ -519,6 +574,7 @@ if (loading_user) {
 var home_posts = undefined
 if(loadingHome){
   // chekcing is it new user or user has friends or posts
+  
   var user_have_post_or_friends = ((userData.userAllPosts == false) && (userData.userAllFriends == false))
 
   var home_data_shorted = (userData && !user_have_post_or_friends)? 
@@ -526,12 +582,14 @@ if(loadingHome){
               :
               homeData;
 
+  // var home_data_shorted = homeData[0].post? homeData.sort((a,b)=> b.post.id-a.post.id) : homeData
+
   home_posts = !home_data_shorted? "" 
   : home_data_shorted.map(n=> {
     var handle_profile = ()=>{}
     var post_liked = ()=> {}
     var comment_submit_btn_action = ()=> {}
-    var is_liked = undefined
+    var is_liked = ""
     var post_data = undefined
     var all_post_comments = undefined
 
@@ -552,7 +610,13 @@ if(loadingHome){
       }
 
       // already liked
-      is_liked = n.post.liked_by_users.split(',').includes(userData.userName)
+      if (homeData[0].post) {
+        is_liked = n.post.liked_by_users.split(',').includes(userData.userName)
+      } 
+      else {
+        is_liked = n.liked_by_users.split(',').includes(userData.userName)
+      }
+
 
       // Calling the fucntin to pass event and Item
       post_liked = ()=>  {
@@ -676,6 +740,7 @@ const handle_click = (event) => {
 
   const page = element.childNodes[0].childNodes[1].innerHTML
 
+
   // profile_funtion
   if (page == 'Profile') {
     handle_current_user_all_post(userData.userAllPosts)
@@ -690,7 +755,7 @@ const handle_click = (event) => {
     main_pop_handle()
   } else {
     set_current_page(page)
-    history.pushState(null, '/', page);
+    // history.pushState(null, '/', page);
   }
 
   handle_reload()
@@ -764,6 +829,7 @@ var left_side =
 <Left_sidebar 
   menu_function = {()=> handle_click}
   main_logo = {main_logo}
+  backendURL = {backendURL}
 
 />
 
@@ -783,7 +849,10 @@ function setting_page_body () {
     page_body = 
         <>
           <Profile 
-            newPost = {<New_post/>}
+            newPost = {<New_post 
+                        upload_url = {`${backendURL}/upload`} 
+                        file_check = {()=> check_file_size}
+                        />}
             userData = {userData}
             userImage = {backendURL+"/profile/"+userData.userName+"/"+userData.userImageUrl}
             user_all_post = {all_posts_user}
@@ -899,11 +968,10 @@ window.onload = ()=> {
             {!(currentWidth >= mobileWidth) && 
               <Mobile_header
               main_logo={main_logo}
-              main_search = {
-              <Search_main
-                hanlde_search = {()=> hanlde_search}
-              />
-            }
+              main_search = {<Search_main
+                              hanlde_search = {()=> hanlde_search}
+                            />}
+              backendURL = {backendURL}
               />}
               
             {page_body}

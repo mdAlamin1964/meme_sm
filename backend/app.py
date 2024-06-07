@@ -1,20 +1,38 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, make_response, Response
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
 import random
 
+
 app = Flask(__name__)
-CORS(app)
-app.debug = True
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "alamin19"
 db = SQLAlchemy(app)
 
 
-HOST = "http://localhost:5000/"
-FRONTEND = "http://localhost:5173/meme_sm/"
+FRONTEND = "https://mdalmaincoder1.pythonanywhere.com/"
+
+supported_file = ["jpg","jpeg","png"]
+
+
+## default
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+#erroer messate
+@app.route('/_massage/<msg>')
+def err_msg(msg):
+    return render_template('index.html')
+
+
+
+#profile
+@app.route('/Profile')
+def profile():
+    return redirect(url_for('index'))
 
 
 
@@ -58,17 +76,17 @@ class User(db.Model):
 
 
 
-# User post 
+# User post
 class User_post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String(50))
+    user_name = db.Column(db.String(50), nullable=False)
     file_name = db.Column(db.String(100))
     data = db.Column(db.LargeBinary)
     description = db.Column(db.String(500))
     date = db.Column(db.DateTime(), default = datetime.utcnow())
-    liked_by = db.Column(db.Integer, default=0) 
+    liked_by = db.Column(db.Integer, default=0)
     liked_by_users = db.Column(db.String(5000), default="")
-    
+
     def __repr__(self):
         return f"{self.user_name}"
 
@@ -116,19 +134,11 @@ def build_actual_response(response):
 
 
 
-
-logged_user = {
-    'user' : ''
-}
-
-
-
-
 #post formate
 def post_formate(i):
     user_image = User.query.filter_by(userName=i.user_name).first()
     all_comments = Post_comments.query.filter_by(user_post_id=i.id).all()
-    
+
     sorted_all_comments = sorted(all_comments, key=lambda x: x.id, reverse=True)
 
     all_comments_data = []
@@ -145,7 +155,7 @@ def post_formate(i):
         'liked_by_users': i.liked_by_users,
         'user_image': user_image.user_image_name,
         'all_comments': all_comments_data,
-        
+
     }
 
 
@@ -176,11 +186,11 @@ def validate_info(info):
 
 #sending error message
 def send_massage(message='Something went wrong'):
-    
+
     if ' ' in message:
         message =  message.replace(" ","_")
-    
-    return redirect(f'{FRONTEND}_massage/{message}')
+
+    return redirect(url_for('err_msg', msg=message))
 
 
 
@@ -190,10 +200,10 @@ def send_massage(message='Something went wrong'):
 @app.route('/userData')
 def user_data():
     try:
-        active_user= User.query.filter_by(userName= logged_user['user']).first()
+        active_user= User.query.filter_by(userName= session["userName"]).first()
 
         #user all post
-        user_all_posts = User_post.query.filter_by(user_name = logged_user['user']).all()
+        user_all_posts = User_post.query.filter_by(user_name = session["userName"]).all()
 
         use_posts = []
         for i in user_all_posts:
@@ -201,17 +211,17 @@ def user_data():
 
 
         #user all frineds
-        user_all_friends = User_friends.query.filter_by(user_name=logged_user['user']).all()
+        user_all_friends = User_friends.query.filter_by(user_name=session["userName"]).all()
 
         user_friends = []
         user_friends_user_name = []
         for i in user_all_friends:
             friendList = User.query.filter_by(userName=i.user_friend).first()
             friend_post = User_post.query.filter_by(user_name=friendList.userName).all()
-            
+
             user_friends_user_name.append(i.user_friend)
 
-            friend_all_post = [] 
+            friend_all_post = []
             for j in friend_post:
                 friend_all_post.append(post_formate(j))
 
@@ -219,7 +229,7 @@ def user_data():
                 'friend_profile' : profile_formate(friendList),
                 'user_friend_post':friend_all_post,
                 })
-        
+
 
         # Suggested friend to show
         suggested_frien_count = 12
@@ -229,7 +239,7 @@ def user_data():
         suggested_friends_show = []
         for i in suggested_friends_list:
             i = str(i)
-            if i != logged_user['user'] and i not in user_friends_user_name:
+            if i != session["userName"] and i not in user_friends_user_name:
                 suggest_user = User.query.filter_by(userName=i).first()
                 suggested_friends_show.append(profile_formate(suggest_user))
 
@@ -245,8 +255,8 @@ def user_data():
             'userAllFriends': user_friends,
             'suggested_friends': suggested_friends_show,
         }))
-    except Exception as e:
-       return render_template('failure.html', cause=e)
+    except:
+       return send_massage()
 
 
 
@@ -255,8 +265,8 @@ def user_data():
 @app.route('/homeData')
 def home_data():
     try:
-        user_friends_list = User_friends.query.filter_by(user_name=logged_user['user']).all()
-        
+        user_friends_list = User_friends.query.filter_by(user_name=session["userName"]).all()
+
         print('alain')
         #adding friends post
         all_friends_post=[]
@@ -269,31 +279,45 @@ def home_data():
                     'post':post_formate(j),
                     'profile': profile_formate(friend_profile),
                     })
-         
+
         # adding User own post
-        user_own_post = User_post.query.filter_by(user_name=logged_user['user']).all()
-        user_profile = User.query.filter_by(userName=logged_user['user']).first()
+        user_own_post = User_post.query.filter_by(user_name=session["userName"]).all()
+        user_profile = User.query.filter_by(userName=session["userName"]).first()
         for j in user_own_post:
             all_friends_post.append({
                     'post':post_formate(j),
                     'profile': profile_formate(user_profile),
                     })
-        
+
         if user_friends_list:
             return build_actual_response(jsonify(all_friends_post))
         else:
-            print('alain')
             random_all_posts = []
             random_posts = User_post.query.order_by(User_post.id).all()
             post_count = 12 if 12 <= len(random_posts) else len(random_posts)
             random_posts = random.sample(random_posts, post_count)
-            
+
             for i in random_posts:
                 random_all_posts.append(post_formate(i))
-            
+
             return build_actual_response(jsonify(random_all_posts))
-    except Exception as e:
-       return render_template('failure.html', cause=e)
+    except:
+        try:
+            random_all_posts = []
+            random_posts = User_post.query.order_by(User_post.id).all()
+            post_count = 12 if 12 <= len(random_posts) else len(random_posts)
+            random_posts = random.sample(random_posts, post_count)
+
+            for i in random_posts:
+                if i.user_name :
+                    random_all_posts.append(post_formate(i))
+
+            #return f"{random_posts}"
+            return build_actual_response(jsonify(random_all_posts))
+        except:
+            return #send_massage('randowm post faild')
+
+        return send_massage()
 
 
 
@@ -309,6 +333,9 @@ def get_image(user,url):
         return Response(image, mimetype="")
     except:
         return "No image found"
+
+
+
 
 
 #user post Image show
@@ -338,35 +365,31 @@ def register():
         password_confirm = validate_info(request.form.get("register-pass-confirm"))
         userImage = request.files['user-photo']
 
-        check_user_name = User.query.filter_by(userName=userName).first()  
+        check_user_name = User.query.filter_by(userName=userName).first()
 
         if check_user_name:
             return send_massage('user name taken plase try diffrent one')
 
-
         if (fullName and userName) and (password == password_confirm):
             new_user = User(fullName=fullName, userName=userName, bDay=bDay, password=password, user_image_name=userImage.filename ,user_image=userImage.read(), joinDate = datetime.utcnow())
             db.session.add(new_user)
-            db.session.commit() 
+            db.session.commit()
             return send_massage('Account Created Please login')
         else:
             return send_massage('invalid input or confrim password do not match!')
 
-        
+
     except Exception as e:
         return f'{e}'
 
 
 
 
-
-supported_file = ["jpg","jpeg","png"]
-
 #uplad files to server
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
-        user_name = logged_user['user']
+        user_name = session["userName"]
         description = request.form.get('description')
         file = request.files["file"]
         file_exten = file.filename.split('.')
@@ -375,15 +398,14 @@ def upload():
         if not file:
             return send_massage('Please add image')
 
-        if file_exten[len(file_exten)-1] not in supported_file:
+        elif file_exten[len(file_exten)-1] not in supported_file:
             return send_massage('file not support!')
-        
-        new_post = User_post(user_name=user_name, description=description,file_name = file.filename, data = file.read(), date=datetime.utcnow())
-        db.session.add(new_post)
-        db.session.commit()
-
-        return redirect(FRONTEND+"Profile")
-    except Exception as e:
+        else:
+            new_post = User_post(user_name=user_name, description=description,file_name = file.filename, data = file.read(), date=datetime.utcnow())
+            db.session.add(new_post)
+            db.session.commit()
+            return redirect(FRONTEND)
+    except:
         return send_massage()
 
 
@@ -394,15 +416,15 @@ def upload():
 @app.route('/delete-post/<int:id>')
 def delete_post(id):
     try:
-        post_del = User_post.query.filter_by(id=id, user_name=logged_user['user']).first()
-        
+        post_del = User_post.query.filter_by(id=id, user_name=session["userName"]).first()
+
         #Delete commets as well
         Post_comments.query.filter(Post_comments.user_post_id == id).delete()
 
         db.session.delete(post_del)
         db.session.commit()
         return redirect(FRONTEND+"Profile")
-    except Exception as e:
+    except:
         return send_massage()
 
 
@@ -415,12 +437,12 @@ def delete_post(id):
 @app.route('/add-friend/<string:friend>')
 def add_friends(friend):
     try:
-        add_new_friend = User_friends(user_name=logged_user['user'], user_friend=friend)
+        add_new_friend = User_friends(user_name=session["userName"], user_friend=friend)
 
         db.session.add(add_new_friend)
         db.session.commit()
         return redirect(FRONTEND+"Profile")
-    except Exception as e:
+    except:
         return send_massage()
 
 
@@ -429,13 +451,13 @@ def add_friends(friend):
 @app.route('/remove-friend/<string:user>')
 def remove_friends(user):
     try:
-        remove_friend = User_friends.query.filter_by(user_name=logged_user['user'], user_friend = user).first()
+        remove_friend = User_friends.query.filter_by(user_name=session["userName"], user_friend = user).first()
 
         db.session.delete(remove_friend)
         db.session.commit()
 
         return redirect(FRONTEND+"Profile")
-    except Exception as e:
+    except:
         return send_massage()
 
 
@@ -444,14 +466,14 @@ def remove_friends(user):
 
 
 #Update user Data
-@app.route('/update-userData', methods=['POST', 'GET'])
+@app.route('/update-userData', methods=['POST'])
 def update_userData():
     try:
         new_name = request.form.get('update-name')
         new_bday = request.form.get('update-bday')
         new_image = request.files['update-photo']
-        
-        user = User.query.filter_by(userName=logged_user['user']).first()
+
+        user = User.query.filter_by(userName=session["userName"]).first()
 
         if validate_info(new_name):
             user.fullName= new_name
@@ -462,7 +484,7 @@ def update_userData():
             user.user_image_name = new_image.filename
 
         db.session.commit()
-        return redirect(FRONTEND+"Profile")
+        return redirect(FRONTEND)
 
     except Exception as e:
         return send_massage(e)
@@ -479,11 +501,10 @@ def login():
         current_user = User.query.filter_by(userName = request.form['user']).first()
         if current_user.password == request.form['password']:
             session["userName"] = request.form['user']
-            logged_user['user'] = session["userName"]
             return redirect(FRONTEND)
         else:
             return send_massage('Incorrect Password!')
-    except Exception as e:
+    except:
         return send_massage("Loggin failed! no Data matched")
 
 
@@ -495,11 +516,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    logged_user['user'] = None
     return redirect(FRONTEND)
-
-
-
 
 
 
@@ -517,21 +534,21 @@ def liked_post(id):
 
         #removing emply list item
         all_likes = list(filter(None, likes_split))
-        if str(logged_user['user']) in all_likes:
+        if str(session["userName"]) in all_likes:
             post.liked_by -= 1
-            all_likes.remove(logged_user['user'])
+            all_likes.remove(session["userName"])
         else:
             post.liked_by += 1
-            all_likes.append(logged_user['user'])
-            
+            all_likes.append(session["userName"])
+
         post.liked_by_users = ",".join(all_likes)
         db.session.commit()
         return build_actual_response(jsonify({
             'total_likes': len(all_likes),
             'liked_by' : all_likes,
         }))
-    
-    except Exception as e:
+
+    except:
         return send_massage()
 
 
@@ -547,8 +564,8 @@ def like_remove_post():
         db.session.commit()
         print(post)
         return "Yes"
-    
-    except Exception as e:
+
+    except:
         return send_massage()
 
 
@@ -594,6 +611,6 @@ def query_data(query):
 
 
 
+# if __name__ == "__main__":
+#     app.run(debug=True)
 
-if __name__ == "__main__":
-    app.run(debug=True)

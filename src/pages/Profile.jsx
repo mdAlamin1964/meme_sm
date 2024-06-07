@@ -15,7 +15,7 @@ export default function profile({newPost, userData,userImage, user_all_post, sho
                                 <h2>{userData.fullName}</h2>
                                 <p className="user-name">@{userData.userName}</p>
                                 <h4>{userData.bDay}</h4>
-                                <h6>join since: {userData.joinDate}</h6>
+                                <h6>join since: {userData.joinDate.slice(0,16)}</h6>
                             </div>
                             <a className="pointer" onClick={show_pop_handle()}>
                                     <button className="secondery-btn mt-2">Update Profile</button>

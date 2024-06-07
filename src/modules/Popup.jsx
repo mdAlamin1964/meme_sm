@@ -20,10 +20,9 @@ export default function pop_up({main_pop_handle, data, log_reg_pop, additional_c
 
 
                 <div className="main-me">
-                        <a href="https://www.linkedin.com/in/alamin1964/" target='_blank'>Concept & build by MD. Alamin</a>
+                        <a href="https://www.fiverr.com/alamin1964" target='_blank'>Concept & build by MD. Alamin</a>
                 </div>
             </div>
-            
         </div>
     </>
     )

@@ -328,4 +328,8 @@
         font-size: $small_font_size;
         color: $gray-text-color;
     }
+
+    .top-right {
+        display: none !important;
+    }
 }

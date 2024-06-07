@@ -1,11 +1,13 @@
 import React from "react";
-export default function left_sidebar({menu_function, main_logo}) {
+export default function left_sidebar({menu_function, main_logo, backendURL}) {
     return (
         <>
             <div className="left-sidebar py-4">
                 <div className="container p-0">
                     <div className="logo">
-                        <img src={main_logo} alt="" />
+                       <a href={backendURL}>
+                            <img src={main_logo} alt="" />
+                        </a>
                     </div>
 
                     <div className="left-sidebar-menu mt-4">
