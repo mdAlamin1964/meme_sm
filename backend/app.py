@@ -11,7 +11,7 @@ app.secret_key = "alamin19"
 db = SQLAlchemy(app)
 
 
-FRONTEND = "https://mdalmaincoder1.pythonanywhere.com/"
+FRONTEND = "https://mdalmaincoder1.pythonanywhere.com"
 
 supported_file = ["jpg","jpeg","png"]
 
@@ -32,7 +32,7 @@ def err_msg(msg):
 #profile
 @app.route('/Profile')
 def profile():
-    return redirect(url_for('index'))
+    return render_template('index.html')
 
 
 
@@ -267,7 +267,6 @@ def home_data():
     try:
         user_friends_list = User_friends.query.filter_by(user_name=session["userName"]).all()
 
-        print('alain')
         #adding friends post
         all_friends_post=[]
         for i in user_friends_list:
@@ -289,7 +288,7 @@ def home_data():
                     'profile': profile_formate(user_profile),
                     })
 
-        if user_friends_list:
+        if all_friends_post:
             return build_actual_response(jsonify(all_friends_post))
         else:
             random_all_posts = []
@@ -315,7 +314,7 @@ def home_data():
             #return f"{random_posts}"
             return build_actual_response(jsonify(random_all_posts))
         except:
-            return #send_massage('randowm post faild')
+            return send_massage('randowm post faild')
 
         return send_massage()
 
@@ -379,8 +378,10 @@ def register():
             return send_massage('invalid input or confrim password do not match!')
 
 
-    except Exception as e:
-        return f'{e}'
+    except:
+        return send_massage()
+
+
 
 
 
@@ -404,7 +405,7 @@ def upload():
             new_post = User_post(user_name=user_name, description=description,file_name = file.filename, data = file.read(), date=datetime.utcnow())
             db.session.add(new_post)
             db.session.commit()
-            return redirect(FRONTEND)
+            return redirect(f"{FRONTEND}/Profile")
     except:
         return send_massage()
 
@@ -423,7 +424,7 @@ def delete_post(id):
 
         db.session.delete(post_del)
         db.session.commit()
-        return redirect(FRONTEND+"Profile")
+        return redirect(FRONTEND+"/Profile")
     except:
         return send_massage()
 
@@ -441,7 +442,7 @@ def add_friends(friend):
 
         db.session.add(add_new_friend)
         db.session.commit()
-        return redirect(FRONTEND+"Profile")
+        return redirect(FRONTEND+"/Profile")
     except:
         return send_massage()
 
@@ -456,7 +457,7 @@ def remove_friends(user):
         db.session.delete(remove_friend)
         db.session.commit()
 
-        return redirect(FRONTEND+"Profile")
+        return redirect(FRONTEND)
     except:
         return send_massage()
 

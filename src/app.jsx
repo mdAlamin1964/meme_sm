@@ -508,7 +508,7 @@ function check_file_size(e){
       const context = canvas.getContext("2d")
       context.drawImage(image, 0, 0, canvas.width, canvas.height)
       
-      var new_image_url = context.canvas.toDataURL("image/jpeg", 70)
+      var new_image_url = context.canvas.toDataURL("image/jpeg, image/png", 70)
       // change the input file to compressed one
       fetch(new_image_url)
       .then(res=> res.blob())
@@ -906,25 +906,6 @@ function setting_page_body () {
 }
 
 setting_page_body()
-
-
-
-// setting refresh window current class
-window.onload = ()=> {
-  setTimeout(()=> {
-    const all_menu = document.querySelectorAll('.left-sidebar-menu ul li a')
-    all_menu.forEach(n=> {
-      n.classList.remove('active')
-      var active_page = n.childNodes[0].childNodes[1].innerHTML
-      if (active_page ==  current_page) {
-        n.classList.add('active')
-      }
-    })
-  }, 600)
-
-}
-
-
 
 
 ///PAGE MAIN RETURN//////////////////////////////
